@@ -25,8 +25,10 @@ def calculate_cooccurrence(df_exploded):
     
     for row in report_groups.itertuples():
         elements_used = getattr(row, "data_element")
-        # Use set to ensure unique elements only
-        for combo in combinations(sorted(set(elements_used)), 2):
+        # Use set to ensure unique elements only and convert all elements to strings
+        # This ensures we can sort them without type comparison errors
+        unique_elements = set(str(element) for element in elements_used)
+        for combo in combinations(sorted(unique_elements), 2):
             co_occurrence[combo] += 1
     
     return co_occurrence
