@@ -26,6 +26,13 @@ from src.analysis.clustering import detect_communities, analyze_communities
 from src.analysis.metrics import evaluate_product_groups
 import config
 
+def debug_type_info(value1, value2, context=""):
+    """Print debug information about types when comparison fails."""
+    print(f"\n*** TYPE COMPARISON DEBUG ({context}) ***")
+    print(f"Value 1: '{value1}' of type {type(value1)}")
+    print(f"Value 2: '{value2}' of type {type(value2)}")
+    print("*** END DEBUG ***\n")
+
 class ResumableGridSearch:
     """
     Grid search with checkpoint capability to allow resuming interrupted searches.
@@ -128,8 +135,15 @@ class ResumableGridSearch:
         # Convert to list of dictionaries
         grid = []
         for combo in combinations:
-            param_dict = {name: value for name, value in zip(param_names, combo)}
-            grid.append(param_dict)
+            try:
+                param_dict = {name: value for name, value in zip(param_names, combo)}
+                grid.append(param_dict)
+            except Exception as e:
+                # Debug the values that caused the issue
+                print(f"Error creating parameter combination: {str(e)}")
+                for i, (name, value) in enumerate(zip(param_names, combo)):
+                    print(f"Parameter {name}: '{value}' of type {type(value)}")
+                raise
         
         # Shuffle to ensure diverse sampling in case of interruption
         np.random.shuffle(grid)
@@ -250,11 +264,26 @@ class ResumableGridSearch:
                 
                 try:
                     # Extract parameters
-                    community_algorithm = params.get('community_algorithm', config.COMMUNITY_ALGORITHM)
-                    community_resolution = params.get('community_resolution', config.COMMUNITY_RESOLUTION)
-                    min_pattern_frequency = params.get('min_pattern_frequency', 2)
-                    quality_weight_coverage = params.get('quality_weight_coverage', 0.5)
-                    quality_weight_redundancy = params.get('quality_weight_redundancy', 0.5)
+                    try:
+                        community_algorithm = params.get('community_algorithm', config.COMMUNITY_ALGORITHM)
+                        community_resolution = params.get('community_resolution', config.COMMUNITY_RESOLUTION)
+                        min_pattern_frequency = params.get('min_pattern_frequency', 2)
+                        quality_weight_coverage = params.get('quality_weight_coverage', 0.5)
+                        quality_weight_redundancy = params.get('quality_weight_redundancy', 0.5)
+                        
+                        # Add type debugging
+                        print("\nParameter types:")
+                        print(f"community_resolution: {type(community_resolution)}")
+                        print(f"min_pattern_frequency: {type(min_pattern_frequency)}")
+                        print(f"quality_weight_coverage: {type(quality_weight_coverage)}")
+                        print(f"quality_weight_redundancy: {type(quality_weight_redundancy)}")
+                        
+                    except Exception as e:
+                        print(f"Error extracting parameters: {str(e)}")
+                        # Print all parameters for debugging
+                        for k, v in params.items():
+                            print(f"  {k}: '{v}' of type {type(v)}")
+                        continue
                     
                     # Detect communities with current parameters
                     communities = detect_communities(
@@ -307,9 +336,20 @@ class ResumableGridSearch:
                     self.results.append(result)
                     
                     # Update optimal parameters if this is the best result so far
-                    if not self.optimal_params or quality_score > self.optimal_params.get('quality_score', 0):
-                        self.optimal_params = result
-                        self._log_progress(f"New optimal parameters found: {community_algorithm}, resolution={community_resolution}")
+                    current_score = quality_score
+                    previous_best = self.optimal_params.get('quality_score', 0) if self.optimal_params else 0
+
+                    try:
+                        if not self.optimal_params or current_score > previous_best:
+                            self.optimal_params = result
+                            self._log_progress(f"New optimal parameters found: {community_algorithm}, resolution={community_resolution}")
+                    except TypeError as e:
+                        # Debug the comparison that failed
+                        debug_type_info(current_score, previous_best, "optimal parameter comparison")
+                        # Force conversion to make comparison work
+                        if not self.optimal_params or float(current_score) > float(previous_best):
+                            self.optimal_params = result
+                            self._log_progress(f"New optimal parameters found after type correction")
                     
                 except Exception as e:
                     self._log_progress(f"Error with parameters {params}: {str(e)}")
@@ -378,6 +418,19 @@ class ResumableGridSearch:
         
         # Filter to parameters that exist and vary
         numeric_params = [p for p in numeric_params if p in results_df.columns and results_df[p].nunique() > 1]
+
+        # For each parameter, debug the types before sorting
+        for param in numeric_params:
+            values = results_df[param].tolist()
+            print(f"\nValues for parameter {param}:")
+            for i, v in enumerate(values[:5]):  # Show first 5 values
+                print(f"  Value {i}: '{v}' of type {type(v)}")
+            
+            try:
+                # Try to do operations that might trigger type errors
+                results_df[param].sort_values()
+            except TypeError as e:
+                debug_type_info(values[0], values[1], f"sorting parameter {param}")
         
         # Metrics to analyze
         metrics = [
@@ -464,6 +517,24 @@ class ResumableGridSearch:
         
         self._log_progress(f"Parameter influence visualizations saved to {self.viz_dir}")
 
+
+
+def ensure_parameter_types(param_ranges):
+    """Ensure all parameters have consistent types."""
+    numeric_param_names = [
+        'community_resolution', 
+        'min_pattern_frequency',
+        'quality_weight_coverage', 
+        'quality_weight_redundancy'
+    ]
+    
+    for param_name in numeric_param_names:
+        if param_name in param_ranges:
+            # Convert all values to float
+            param_ranges[param_name] = [float(value) for value in param_ranges[param_name]]
+    
+    return param_ranges
+
 def main():
     """
     Main function to run parameter optimization.
@@ -490,7 +561,7 @@ def main():
         'quality_weight_coverage': [0.3, 0.4, 0.5, 0.6],
         'quality_weight_redundancy': [0.3, 0.4, 0.5, 0.6]
     }
-    
+    param_ranges = ensure_parameter_types(param_ranges)
     # Define input file
     input_file = args.input_file or config.INPUT_FILE
     
