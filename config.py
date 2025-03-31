@@ -31,9 +31,14 @@ EDGE_COLOR = 'gray'          # Color of edges
 NODE_SIZE_MULTIPLIER = 20    # Factor to multiply node importance by for sizing
 EDGE_WIDTH_MULTIPLIER = 0.5  # Factor to multiply edge weight by for width
 
-# Community detection settings
+# Standard community detection settings
 COMMUNITY_ALGORITHM = 'louvain'  # Options: 'louvain', 'label_propagation', 'greedy_modularity'
 COMMUNITY_RESOLUTION = 1.0       # Resolution parameter for Louvain method
                                  # Higher values lead to smaller communities
 GENERATE_COMMUNITY_SUBGRAPHS = True  # Whether to generate separate visualizations for each community
 EXPORT_COMMUNITY_DATA = True      # Whether to export community data to CSV
+
+# Hierarchical community settings
+USE_HIERARCHICAL = True          # Whether to use hierarchical detection
+HIERARCHICAL_LEVELS = 2          # Number of levels to detect
+HIERARCHICAL_VIZ_LEVEL = 1       # Level to use for visualizations

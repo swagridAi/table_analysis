@@ -11,19 +11,25 @@ Performs community detection to identify clusters of related data elements
 Exports results in various formats for further analysis
 
 Project Structure
-Copydata_cooccurrence_analysis/
+data_cooccurrence_analysis/
 │
 ├── data/                          # Data files
 │   ├── raw/                       # Original input data
 │   │   └── sample_data.csv
 │   └── processed/                 # Generated data files
 │       ├── exploded_data.csv
-│       └── cooccurrence_matrix.csv
+│       ├── cooccurrence_matrix.csv
+│       ├── communities.csv
+│       ├── communities_level0.csv
+│       ├── communities_level1.csv
+│       └── community_summary.csv
 │
 ├── output/                        # Output files
 │   ├── visualizations/            # Visualization outputs
 │   │   ├── cooccurrence_heatmap.png
-│   │   └── cooccurrence_network.png
+│   │   ├── cooccurrence_network.png
+│   │   ├── cooccurrence_network_level1.png
+│   │   └── communities/           # Individual community visualizations
 │   └── exports/                   # Other exports
 │       └── cooccurrence_network.graphml
 │
@@ -35,7 +41,8 @@ Copydata_cooccurrence_analysis/
 │   │
 │   ├── analysis/                  # Analysis modules
 │   │   ├── __init__.py
-│   │   └── cooccurrence.py        # Co-occurrence analysis functions
+│   │   ├── cooccurrence.py        # Co-occurrence analysis functions
+│   │   └── clustering.py          # Community detection functions
 │   │
 │   └── visualization/             # Visualization modules
 │       ├── __init__.py
@@ -119,7 +126,38 @@ More computationally intensive but often more accurate
 Good for smaller to medium-sized networks
 Built into NetworkX (no additional dependencies)
 
+Hierarchical Community Detection
+For more granular analysis, the project now supports hierarchical community detection, which:
 
+Identifies sub-communities within larger communities
+Creates a multi-level view of data relationships
+Allows analysis at different levels of granularity
+Uses increasing resolution parameters at deeper levels
+
+The hierarchical approach works by:
+
+First detecting base communities using standard methods
+Then recursively analyzing each community to find sub-communities
+Creating a hierarchy of communities (e.g., community 0.1.2 means sub-community 2 within sub-community 1 within major community 0)
+
+Community Detection Examples
+Example 1: Data Domains
+Community detection can reveal natural domains in your data. For example, you might find:
+
+Community 0: Financial data elements (accounts, transactions, balances)
+Community 1: Customer profile data elements (demographics, preferences)
+Community 2: Product information data elements (inventory, pricing)
+
+Example 2: Hierarchical Structure
+Hierarchical detection might reveal:
+
+Community 0: Financial data
+
+Sub-community 0.0: Accounting data
+Sub-community 0.1: Transaction data
+
+Sub-community 0.1.0: Retail transactions
+Sub-community 0.1.1: Commercial transactions
 
 Configuring Community Detection
 You can configure the community detection in config.py:
