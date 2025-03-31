@@ -111,7 +111,7 @@ def main():
                 "community_id": community_id,
                 "size": community_analysis['community_sizes'][community_id],
                 "density": community_analysis['community_densities'][community_id],
-                "elements": ", ".join(elements[:10]) + ("..." if len(elements) > 10 else "")
+                "elements": ", ".join(elements)
             })
             
         summary_df = pd.DataFrame(summary_rows)
