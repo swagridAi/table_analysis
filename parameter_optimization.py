@@ -128,6 +128,25 @@ class ResumableGridSearch:
         # Get all parameter names
         param_names = list(self.param_ranges.keys())
         
+        # Sanitize parameter ranges
+        sanitized_ranges = {}
+        for name, values in self.param_ranges.items():
+            if name in ['community_resolution', 'min_pattern_frequency', 
+                    'quality_weight_coverage', 'quality_weight_redundancy']:
+                # Convert numeric parameters to float
+                sanitized_values = [float(v) if isinstance(v, (int, str)) and str(v).replace('.', '', 1).isdigit() else v 
+                                for v in values]
+                sanitized_ranges[name] = sanitized_values
+                
+                # Log any changes
+                if sanitized_values != values:
+                    print(f"Sanitized parameter {name}: {values} -> {sanitized_values}")
+            else:
+                sanitized_ranges[name] = values
+        
+        # Use sanitized ranges
+        self.param_ranges = sanitized_ranges
+        
         # Generate all combinations of parameter values
         param_values = [self.param_ranges[name] for name in param_names]
         combinations = list(product(*param_values))
@@ -535,6 +554,40 @@ def ensure_parameter_types(param_ranges):
     
     return param_ranges
 
+def inspect_input_data(input_file):
+    """Inspect the input data for potential issues."""
+    print(f"\n=== INSPECTING DATA FROM {input_file} ===")
+    try:
+        # Load the data
+        df = load_data(input_file)
+        
+        # Check for missing values
+        missing_counts = df.isnull().sum()
+        print("\nMissing value counts:")
+        print(missing_counts[missing_counts > 0] if any(missing_counts > 0) else "No missing values")
+        
+        # Check data types
+        print("\nColumn data types:")
+        print(df.dtypes)
+        
+        # Check for mixed types in important columns
+        for col in ["Data Element Table", "Data Element Column", "Enterprise Report Catalog"]:
+            if col in df.columns:
+                types_in_column = df[col].apply(type).value_counts()
+                print(f"\nTypes in {col}:")
+                print(types_in_column)
+        
+        # Sample values from key columns
+        print("\nSample values:")
+        for col in df.columns:
+            unique_values = df[col].dropna().unique()[:3]  # First 3 unique values
+            print(f"{col}: {unique_values}")
+            
+        return df
+    except Exception as e:
+        print(f"Error inspecting data: {str(e)}")
+        return None
+
 def main():
     """
     Main function to run parameter optimization.
@@ -572,6 +625,8 @@ def main():
     else:
         output_dir = args.output_dir
     
+    # Ensure input data is clean 
+    input_df = inspect_input_data(input_file)
     # Create the grid search object
     grid_search = ResumableGridSearch(
         input_file=input_file,
