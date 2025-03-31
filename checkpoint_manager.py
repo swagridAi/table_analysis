@@ -155,9 +155,9 @@ class CheckpointManager:
         
         # Determine which parameters to visualize
         numeric_params = [
-            'community_resolution',
+            'community_resolution', 
             'min_pattern_frequency',
-            'quality_weight_coverage',
+            'quality_weight_coverage', 
             'quality_weight_redundancy'
         ]
         
@@ -210,16 +210,23 @@ class CheckpointManager:
                         x_range = param_ranges[param1]
                         y_range = param_ranges[param2]
                         
-                        if isinstance(x_range, list) and isinstance(y_range, list) and all(isinstance(v, (int, float)) for v in x_range + y_range):
-                            min_x, max_x = min(x_range), max(x_range)
-                            min_y, max_y = min(y_range), max(y_range)
-                            
-                            # Add slightly transparent background to show full parameter space
-                            plt.axvspan(min_x, max_x, min_y, max_y, alpha=0.1, color='gray')
-                            
-                            # Set axis limits to parameter space
-                            plt.xlim(min_x - 0.1, max_x + 0.1)
-                            plt.ylim(min_y - 0.1, max_y + 0.1)
+                        if isinstance(x_range, list) and isinstance(y_range, list):
+                            # Convert to numeric if possible
+                            try:
+                                x_min = min(float(x) if isinstance(x, str) and x.replace('.', '', 1).isdigit() else x for x in x_range)
+                                x_max = max(float(x) if isinstance(x, str) and x.replace('.', '', 1).isdigit() else x for x in x_range)
+                                y_min = min(float(y) if isinstance(y, str) and y.replace('.', '', 1).isdigit() else y for y in y_range)
+                                y_max = max(float(y) if isinstance(y, str) and y.replace('.', '', 1).isdigit() else y for y in y_range)
+                                
+                                # Add slightly transparent background to show full parameter space
+                                plt.fill_betweenx([y_min, y_max], x_min, x_max, alpha=0.1, color='gray')
+                                
+                                # Set axis limits to parameter space
+                                plt.xlim(x_min - 0.1 * (x_max - x_min), x_max + 0.1 * (x_max - x_min))
+                                plt.ylim(y_min - 0.1 * (y_max - y_min), y_max + 0.1 * (y_max - y_min))
+                            except (TypeError, ValueError):
+                                # If conversion fails, skip parameter space boundaries
+                                pass
                 
                 plt.title(f'Parameter Space Coverage: {param1} vs {param2}')
                 plt.xlabel(param1)
@@ -439,7 +446,7 @@ class CheckpointManager:
         numeric_params = [
             'community_resolution',
             'min_pattern_frequency',
-            'quality_weight_coverage',
+            'quality_weight_coverage', 
             'quality_weight_redundancy'
         ]
         
@@ -462,18 +469,36 @@ class CheckpointManager:
             current_value = best_point[param]
             param_values = param_ranges[param]
             
-            if isinstance(param_values, list) and all(isinstance(v, (int, float)) for v in param_values):
-                # Sort values and find adjacent values to the current best
-                sorted_values = sorted(param_values)
-                
+            if isinstance(param_values, list):
+                # Convert all values to the same type for consistent comparisons
                 try:
-                    current_idx = sorted_values.index(current_value)
+                    if all(isinstance(v, (int, float)) or (isinstance(v, str) and v.replace('.', '', 1).isdigit()) for v in param_values):
+                        # All numeric or numeric strings - convert to float for comparison
+                        numeric_values = [float(v) if isinstance(v, str) else v for v in param_values]
+                        sorted_values = sorted(numeric_values)
+                        current_value_numeric = float(current_value) if isinstance(current_value, str) and current_value.replace('.', '', 1).isdigit() else float(current_value)
+                    else:
+                        # Mixed types, convert all to strings
+                        sorted_values = sorted([str(v) for v in param_values])
+                        current_value_numeric = str(current_value)
+                    
+                    current_idx = sorted_values.index(current_value_numeric)
                     
                     # Try values on either side if they exist
                     for offset in [-2, -1, 1, 2]:
                         new_idx = current_idx + offset
                         if 0 <= new_idx < len(sorted_values):
                             new_value = sorted_values[new_idx]
+                            
+                            # For parameters that were originally strings but converted to float,
+                            # convert back to string to maintain consistency
+                            if isinstance(param_values[0], str) and isinstance(new_value, (int, float)):
+                                if param_values[0].replace('.', '', 1).isdigit():
+                                    # Convert back to string with same format as original
+                                    if '.' in param_values[0]:
+                                        new_value = str(new_value)
+                                    else:
+                                        new_value = str(int(new_value))
                             
                             # Create a new suggestion
                             suggestion = {p: best_point[p] for p in results_df.columns 
@@ -484,16 +509,27 @@ class CheckpointManager:
                             # Check if this combination has already been evaluated
                             # Create a boolean mask for each parameter
                             mask = pd.Series(True, index=results_df.index)
-                            for param in numeric_params:
-                                if param in suggestion and param in results_df.columns:
-                                    mask = mask & (results_df[param] == suggestion[param])
-
+                            for param_check in numeric_params:
+                                if param_check in suggestion and param_check in results_df.columns:
+                                    # Handle different types for comparison
+                                    if isinstance(suggestion[param_check], (int, float)) and results_df[param_check].dtype == 'object':
+                                        # Try to convert strings to numbers for comparison
+                                        try:
+                                            param_values_converted = results_df[param_check].apply(
+                                                lambda x: float(x) if isinstance(x, str) and x.replace('.', '', 1).isdigit() else x
+                                            )
+                                            mask = mask & (param_values_converted == suggestion[param_check])
+                                        except:
+                                            # If conversion fails, compare as is
+                                            mask = mask & (results_df[param_check] == suggestion[param_check])
+                                    else:
+                                        mask = mask & (results_df[param_check] == suggestion[param_check])
+                            
                             # Check if any row matches all conditions
                             if not mask.any():
-                                # This is a new combination
                                 suggestions.append(suggestion)
-                except ValueError:
-                    # Current value not in sorted_values, skip
+                except (ValueError, TypeError) as e:
+                    print(f"Error processing {param}: {str(e)}")
                     continue
         
         # Strategy 2: Explore high-performing regions
@@ -504,18 +540,43 @@ class CheckpointManager:
         # For each top performer, identify promising dimensions to explore
         for _, performer in top_performers.iterrows():
             # Identify the parameter that most correlates with quality
-            correlations = results_df[numeric_params + ['quality_score']].corr()['quality_score']
+            # Convert to numeric if possible before calculating correlation
+            correlation_data = {}
+            for param in numeric_params:
+                try:
+                    # Convert parameter to numeric if it's stored as string but represents a number
+                    if results_df[param].dtype == 'object':
+                        param_values = pd.to_numeric(results_df[param], errors='coerce')
+                        if not param_values.isna().all():  # If conversion was successful
+                            correlation = param_values.corr(results_df['quality_score'])
+                        else:
+                            correlation = 0  # No correlation for non-numeric data
+                    else:
+                        correlation = results_df[param].corr(results_df['quality_score'])
+                    
+                    correlation_data[param] = correlation
+                except Exception:
+                    correlation_data[param] = 0
             
             for param in numeric_params:
-                corr_value = correlations[param]
+                corr_value = correlation_data.get(param, 0)
                 current_value = performer[param]
                 param_values = param_ranges[param]
                 
-                if isinstance(param_values, list) and all(isinstance(v, (int, float)) for v in param_values):
-                    # Determine direction to explore based on correlation
-                    sorted_values = sorted(param_values)
+                if isinstance(param_values, list):
                     try:
-                        current_idx = sorted_values.index(current_value)
+                        # Convert all values to the same type for consistent comparisons
+                        if all(isinstance(v, (int, float)) or (isinstance(v, str) and v.replace('.', '', 1).isdigit()) for v in param_values):
+                            # Convert string numbers to float for comparison
+                            numeric_values = [float(v) if isinstance(v, str) else v for v in param_values]
+                            sorted_values = sorted(numeric_values)
+                            current_value_numeric = float(current_value) if isinstance(current_value, str) and current_value.replace('.', '', 1).isdigit() else float(current_value)
+                        else:
+                            # Mixed types, convert all to strings
+                            sorted_values = sorted([str(v) for v in param_values])
+                            current_value_numeric = str(current_value)
+                        
+                        current_idx = sorted_values.index(current_value_numeric)
                         
                         # If positive correlation, try larger values; if negative, try smaller
                         if corr_value > 0 and current_idx < len(sorted_values) - 1:
@@ -524,6 +585,16 @@ class CheckpointManager:
                             new_value = sorted_values[current_idx - 1]
                         else:
                             continue
+                        
+                        # For parameters that were originally strings but converted to float,
+                        # convert back to string to maintain consistency
+                        if isinstance(param_values[0], str) and isinstance(new_value, (int, float)):
+                            if param_values[0].replace('.', '', 1).isdigit():
+                                # Convert back to string with same format as original
+                                if '.' in param_values[0]:
+                                    new_value = str(new_value)
+                                else:
+                                    new_value = str(int(new_value))
                         
                         # Create a new suggestion
                         suggestion = {p: performer[p] for p in results_df.columns 
@@ -534,15 +605,26 @@ class CheckpointManager:
                         # Check if this combination has already been evaluated
                         # Create a boolean mask for each parameter
                         mask = pd.Series(True, index=results_df.index)
-                        for param in numeric_params:
-                            if param in suggestion and param in results_df.columns:
-                                mask = mask & (results_df[param] == suggestion[param])
-
+                        for param_check in numeric_params:
+                            if param_check in suggestion and param_check in results_df.columns:
+                                # Handle different types for comparison
+                                if isinstance(suggestion[param_check], (int, float)) and results_df[param_check].dtype == 'object':
+                                    # Try to convert strings to numbers for comparison
+                                    try:
+                                        param_values_converted = results_df[param_check].apply(
+                                            lambda x: float(x) if isinstance(x, str) and x.replace('.', '', 1).isdigit() else x
+                                        )
+                                        mask = mask & (param_values_converted == suggestion[param_check])
+                                    except:
+                                        # If conversion fails, compare as is
+                                        mask = mask & (results_df[param_check] == suggestion[param_check])
+                                else:
+                                    mask = mask & (results_df[param_check] == suggestion[param_check])
+                        
                         # Check if any row matches all conditions
                         if not mask.any():
-                            # This is a new combination
                             suggestions.append(suggestion)
-                    except ValueError:
+                    except (ValueError, TypeError):
                         continue
         
         # Strategy 3: Fill gaps in parameter space
@@ -550,46 +632,90 @@ class CheckpointManager:
         for param in numeric_params:
             param_values = param_ranges[param]
             
-            if isinstance(param_values, list) and all(isinstance(v, (int, float)) for v in param_values):
-                # Count occurrences of each value
-                value_counts = results_df[param].value_counts()
-                
-                # Find underexplored values
-                for value in param_values:
-                    if value not in value_counts or value_counts[value] < value_counts.mean() / 2:
-                        # This value is underexplored, create combinations with it
-                        
-                        # Use median values for other parameters
-                        suggestion = {}
-                        for p in numeric_params:
-                            if p == param:
-                                suggestion[p] = value
-                            else:
-                                # Use median of successful combinations for this parameter
-                                top_half = results_df[results_df['quality_score'] > results_df['quality_score'].median()]
-                                if not top_half.empty:
-                                    suggestion[p] = top_half[p].median()
+            if isinstance(param_values, list):
+                try:
+                    # Count occurrences of each value
+                    # Handle type conversion if needed
+                    if all(isinstance(v, (int, float)) or (isinstance(v, str) and v.replace('.', '', 1).isdigit()) for v in param_values):
+                        # Convert to numeric for comparison
+                        value_counts = results_df[param].astype(float).value_counts()
+                        param_values_numeric = [float(v) if isinstance(v, str) else v for v in param_values]
+                    else:
+                        # Use values as is
+                        value_counts = results_df[param].value_counts()
+                        param_values_numeric = param_values
+                    
+                    # Find underexplored values
+                    for value in param_values_numeric:
+                        if value not in value_counts or value_counts[value] < value_counts.mean() / 2:
+                            # This value is underexplored, create combinations with it
+                            
+                            # Use median values for other parameters
+                            suggestion = {}
+                            for p in numeric_params:
+                                if p == param:
+                                    suggestion[p] = value
                                 else:
-                                    suggestion[p] = results_df[p].median()
-                        
-                        # Add categorical parameters from the best combination
-                        for p in param_ranges:
-                            if p not in numeric_params and p in best_point:
-                                suggestion[p] = best_point[p]
-                        
-                        suggestion['strategy'] = f"Fill gap in parameter space ({param}={value})"
-                        
-                        # Check if this combination has already been evaluated
-                        # Create a boolean mask for each parameter
-                        mask = pd.Series(True, index=results_df.index)
-                        for param in numeric_params:
-                            if param in suggestion and param in results_df.columns:
-                                mask = mask & (results_df[param] == suggestion[param])
-
-                        # Check if any row matches all conditions
-                        if not mask.any():
-                            # This is a new combination
-                            suggestions.append(suggestion)
+                                    # Use median of successful combinations for this parameter
+                                    top_half = results_df[results_df['quality_score'] > results_df['quality_score'].median()]
+                                    if not top_half.empty:
+                                        # Convert to numeric if possible
+                                        try:
+                                            if top_half[p].dtype == 'object':
+                                                numeric_values = pd.to_numeric(top_half[p], errors='coerce')
+                                                if not numeric_values.isna().all():
+                                                    suggestion[p] = numeric_values.median()
+                                                else:
+                                                    suggestion[p] = top_half[p].mode()[0]
+                                            else:
+                                                suggestion[p] = top_half[p].median()
+                                        except:
+                                            suggestion[p] = top_half[p].mode()[0]
+                                    else:
+                                        try:
+                                            if results_df[p].dtype == 'object':
+                                                numeric_values = pd.to_numeric(results_df[p], errors='coerce')
+                                                if not numeric_values.isna().all():
+                                                    suggestion[p] = numeric_values.median()
+                                                else:
+                                                    suggestion[p] = results_df[p].mode()[0]
+                                            else:
+                                                suggestion[p] = results_df[p].median()
+                                        except:
+                                            suggestion[p] = results_df[p].mode()[0]
+                            
+                            # Add categorical parameters from the best combination
+                            for p in param_ranges:
+                                if p not in numeric_params and p in best_point:
+                                    suggestion[p] = best_point[p]
+                            
+                            suggestion['strategy'] = f"Fill gap in parameter space ({param}={value})"
+                            
+                            # Check if this combination has already been evaluated
+                            # Create a boolean mask for each parameter
+                            mask = pd.Series(True, index=results_df.index)
+                            for param_check in numeric_params:
+                                if param_check in suggestion and param_check in results_df.columns:
+                                    # Handle different types for comparison
+                                    if isinstance(suggestion[param_check], (int, float)) and results_df[param_check].dtype == 'object':
+                                        # Try to convert strings to numbers for comparison
+                                        try:
+                                            param_values_converted = results_df[param_check].apply(
+                                                lambda x: float(x) if isinstance(x, str) and x.replace('.', '', 1).isdigit() else x
+                                            )
+                                            mask = mask & (param_values_converted == suggestion[param_check])
+                                        except:
+                                            # If conversion fails, compare as is
+                                            mask = mask & (results_df[param_check] == suggestion[param_check])
+                                    else:
+                                        mask = mask & (results_df[param_check] == suggestion[param_check])
+                            
+                            # Check if any row matches all conditions
+                            if not mask.any():
+                                suggestions.append(suggestion)
+                except (ValueError, TypeError) as e:
+                    print(f"Error processing values for {param}: {str(e)}")
+                    continue
         
         # Limit to requested number of suggestions
         suggestions = suggestions[:num_suggestions]
