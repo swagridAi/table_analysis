@@ -1,0 +1,63 @@
+[2025-03-31 18:35:31] Starting new parameter optimization.
+[2025-03-31 18:35:31] Created grid with 50 parameter combinations.
+[2025-03-31 18:35:31] Loading and processing data...
+[2025-03-31 18:35:31] Calculating co-occurrence matrix...
+[2025-03-31 18:35:31] Creating network graph...
+[2025-03-31 18:35:31] Search initialization complete.
+[2025-03-31 18:35:31] Running parameter optimization with 50 total combinations.
+[2025-03-31 18:35:31] 0 already evaluated, 50 remaining.
+[2025-03-31 18:35:31] Testing combination 1/50: {'community_algorithm': 'label_propagation', 'community_resolution': 0.8, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.4}
+[2025-03-31 18:35:31] New optimal parameters found: label_propagation, resolution=0.8
+[2025-03-31 18:35:31] Testing combination 2/50: {'community_algorithm': 'label_propagation', 'community_resolution': 0.8, 'min_pattern_frequency': 2, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.6}
+[2025-03-31 18:35:32] Testing combination 3/50: {'community_algorithm': 'louvain', 'community_resolution': 0.8, 'min_pattern_frequency': 4, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-03-31 18:35:33] Testing combination 4/50: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 2, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.3}
+[2025-03-31 18:35:33] Testing combination 5/50: {'community_algorithm': 'louvain', 'community_resolution': 1.2, 'min_pattern_frequency': 4, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-03-31 18:35:34] Testing combination 6/50: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.4}
+[2025-03-31 18:35:34] Testing combination 7/50: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 2, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.4}
+[2025-03-31 18:35:35] Testing combination 8/50: {'community_algorithm': 'label_propagation', 'community_resolution': 0.8, 'min_pattern_frequency': 2, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.5}
+[2025-03-31 18:35:35] Testing combination 9/50: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 2, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.6}
+[2025-03-31 18:35:36] Testing combination 10/50: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.4}
+[2025-03-31 18:35:36] Testing combination 11/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.2, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.6}
+[2025-03-31 18:35:36] Testing combination 12/50: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.6}
+[2025-03-31 18:35:37] Testing combination 13/50: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.4, 'quality_weight_redundancy': 0.3}
+[2025-03-31 18:35:37] Testing combination 14/50: {'community_algorithm': 'louvain', 'community_resolution': 1.2, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.6}
+[2025-03-31 18:35:37] Testing combination 15/50: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 2, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-03-31 18:35:38] Testing combination 16/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 2, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-03-31 18:35:38] Testing combination 17/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 2, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-03-31 18:35:38] Testing combination 18/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.2, 'min_pattern_frequency': 4, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.3}
+[2025-03-31 18:35:39] Testing combination 19/50: {'community_algorithm': 'louvain', 'community_resolution': 1.2, 'min_pattern_frequency': 2, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.6}
+[2025-03-31 18:35:39] Testing combination 20/50: {'community_algorithm': 'label_propagation', 'community_resolution': 1.2, 'min_pattern_frequency': 4, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.4}
+[2025-03-31 18:35:39] Testing combination 21/50: {'community_algorithm': 'label_propagation', 'community_resolution': 1.2, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.4}
+[2025-03-31 18:35:39] 
+Search interrupted. Saving checkpoint...
+[2025-03-31 18:35:39] Checkpoint saved to optimization_results\search_checkpoint.pkl
+[2025-03-31 18:35:39] You can resume the search by running the script again with the same output directory.
+[2025-03-31 18:35:44] Resuming search from checkpoint. 20 combinations already evaluated, 29 pending.
+[2025-03-31 18:35:44] Loading and processing data...
+[2025-03-31 18:35:44] Calculating co-occurrence matrix...
+[2025-03-31 18:35:44] Creating network graph...
+[2025-03-31 18:35:44] Search initialization complete.
+[2025-03-31 18:35:44] Running parameter optimization with 49 total combinations.
+[2025-03-31 18:35:44] 20 already evaluated, 29 remaining.
+[2025-03-31 18:35:44] Testing combination 22/49: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 4, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.4}
+[2025-03-31 18:35:44] Testing combination 23/49: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.4, 'quality_weight_redundancy': 0.4}
+[2025-03-31 18:35:44] Testing combination 24/49: {'community_algorithm': 'louvain', 'community_resolution': 0.8, 'min_pattern_frequency': 4, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.3}
+[2025-03-31 18:35:45] Testing combination 25/49: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-03-31 18:35:45] Testing combination 26/49: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 2, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.4}
+[2025-03-31 18:35:45] Testing combination 27/49: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.6}
+[2025-03-31 18:35:45] Testing combination 28/49: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 4, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.3}
+[2025-03-31 18:35:46] Testing combination 29/49: {'community_algorithm': 'louvain', 'community_resolution': 1.2, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.4}
+[2025-03-31 18:35:46] Testing combination 30/49: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 4, 'quality_weight_coverage': 0.4, 'quality_weight_redundancy': 0.5}
+[2025-03-31 18:35:46] Testing combination 31/49: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 2, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.5}
+[2025-03-31 18:35:47] Testing combination 32/49: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.4}
+[2025-03-31 18:35:47] Testing combination 33/49: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.2, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.5}
+[2025-03-31 18:35:47] Testing combination 34/49: {'community_algorithm': 'louvain', 'community_resolution': 1.2, 'min_pattern_frequency': 4, 'quality_weight_coverage': 0.4, 'quality_weight_redundancy': 0.6}
+[2025-03-31 18:35:47] Testing combination 35/49: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.5}
+[2025-03-31 18:35:48] Testing combination 36/49: {'community_algorithm': 'label_propagation', 'community_resolution': 1.2, 'min_pattern_frequency': 4, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.6}
+[2025-03-31 18:35:48] Testing combination 37/49: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 4, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.6}
+[2025-03-31 18:35:48] Testing combination 38/49: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 4, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-03-31 18:35:49] Testing combination 39/49: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 3, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.4}
+[2025-03-31 18:35:49] 
+Search interrupted. Saving checkpoint...
+[2025-03-31 18:35:49] Checkpoint saved to optimization_results\search_checkpoint.pkl
+[2025-03-31 18:35:49] You can resume the search by running the script again with the same output directory.

@@ -1,0 +1,160 @@
+Data Co-occurrence Analysis: Parameter Optimization Guide
+This guide explains how to use the parameter optimization framework to find the optimal configuration for your data co-occurrence analysis. The framework systematically evaluates different parameter combinations to identify which configuration produces the best results.
+Table of Contents
+
+Overview
+Input File Format
+Running Parameter Optimization
+Running the Optimal Model
+Visualizing Parameter Impact
+Interpreting Results
+Troubleshooting
+
+Overview
+The parameter optimization process follows these steps:
+
+Create a grid of parameter combinations to test
+For each combination:
+
+Run community detection with specified parameters
+Evaluate resulting communities using metrics
+Record performance metrics
+
+
+Identify the optimal parameter combination
+Visualize parameter impact on performance
+Run the full analysis with optimal parameters
+
+Input File Format
+The framework expects a CSV file with data elements and their associated reports. Here are examples of valid input files:
+Example 1: Basic Format
+csvCopyEnterprise Report Catalog,Critical Data Element,Data Element Table,Data Element Column
+Report 18,N,dbo.Table8,att_13
+Report 16,Y,dbo.Table8,att_15
+"Report 20
+Report 8
+Report 2
+Report 10",N,dbo.Table2,att_11
+"Report 19
+Report 7
+Report 12
+Report 14",N,dbo.Table7,att_20
+This format includes:
+
+Enterprise Report Catalog: The reports using each data element (can be multiple reports separated by newlines)
+Critical Data Element: Flag indicating if the element is critical (Y/N)
+Data Element Table: The table containing the data element
+Data Element Column: The column name of the data element
+
+Example 2: Extended Format
+csvCopyEnterprise Report Catalog,Critical Data Element,Data Element Table,Data Element Column,Data Domain,Data Owner
+"Report 1
+Report 2",Y,dbo.Customer,customer_id,Customer,John Smith
+"Report 3
+Report 4
+Report 5",N,dbo.Customer,customer_name,Customer,John Smith
+"Report 2
+Report 6",Y,dbo.Order,order_id,Order,Jane Doe
+"Report 3
+Report 7",N,dbo.Product,product_id,Product,Mike Johnson
+The system will use the first four columns and ignore additional columns if present.
+Running Parameter Optimization
+To run parameter optimization:
+bashCopypython parameter_optimization.py
+By default, this will:
+
+Load data from the location specified in config.py
+Create a grid of parameter combinations to test
+Evaluate each combination
+Save results to a timestamped directory under the output directory
+
+Customizing Parameter Ranges
+You can modify the parameter ranges in the script:
+pythonCopyparam_ranges = {
+    'community_algorithm': ['louvain', 'label_propagation', 'greedy_modularity'],
+    'community_resolution': [0.5, 0.8, 1.0, 1.2, 1.5, 2.0],
+    'min_pattern_frequency': [2, 3, 4],
+    'quality_weight_coverage': [0.3, 0.4, 0.5, 0.6],
+    'quality_weight_redundancy': [0.3, 0.4, 0.5, 0.6]
+}
+Output Files
+The optimization process generates:
+
+optimization_results.csv: All parameter combinations and their metrics
+optimal_parameters.csv: The best parameter combination found
+Various visualizations showing parameter impact
+
+Running the Optimal Model
+After optimization, run the full analysis with optimal parameters:
+bashCopypython run_optimal_model.py path/to/optimal_parameters.csv [input_file] [output_dir]
+For example:
+bashCopypython run_optimal_model.py parameter_optimization_20250331_123045/results/optimal_parameters.csv data/raw/my_data.csv output/optimal_run
+If you don't specify input_file or output_dir, it will use defaults from config.py and a timestamped directory.
+Visualizing Parameter Impact
+To generate detailed visualizations of parameter impact:
+bashCopypython visualize_parameter_impact.py path/to/optimization_results.csv -o parameter_analysis
+This will create visualizations including:
+
+Parameter impact matrix
+Response curves for each parameter
+Parameter interaction heatmaps
+Performance distribution analysis
+Parameter sensitivity analysis
+
+Interpreting Results
+Key Metrics to Understand
+
+Affinity Score: Measures how frequently elements within communities appear together (higher is better)
+Coverage Ratio: Measures how well communities cover common usage patterns (higher is better)
+Redundancy Score: Measures unnecessary overlap between communities (lower is better)
+Quality Score: Combined score balancing affinity, coverage, and redundancy
+
+Visualization Interpretation
+Parameter Impact Matrix
+Show Image
+This visualization shows correlation between parameters and metrics:
+
+Red cells: Negative correlation
+Blue cells: Positive correlation
+Darker colors: Stronger correlation
+
+Response Curves
+Show Image
+These show how each parameter affects each metric:
+
+X-axis: Parameter value
+Y-axis: Metric value
+Green line: Optimal parameter value
+
+Parameter Sensitivity Ranking
+Show Image
+This shows which parameters have the greatest impact on performance:
+
+Higher bars: More influential parameters
+Lower bars: Less influential parameters
+
+Troubleshooting
+Common Issues
+
+"Not enough parameter variation for impact matrix"
+
+Solution: Increase the range of parameter values to test
+
+
+"Error with parameters..."
+
+Solution: Check the log file for specific errors
+
+
+Memory issues with large datasets
+
+Solution: Reduce the number of parameter combinations with the max_combinations parameter
+
+
+
+Best Practices
+
+Start with a small parameter grid to test the process
+Gradually refine parameter ranges around promising values
+For large datasets, consider running optimization on a subset of data first
+Save optimal parameters from each run to compare different optimization sessions

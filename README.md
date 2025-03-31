@@ -8,6 +8,7 @@ Calculates co-occurrence matrices to show how frequently data elements appear to
 Generates heatmap visualizations of co-occurrence patterns
 Creates network graphs showing relationships between data elements
 Performs community detection to identify clusters of related data elements
+Calculates metrics to assess the viability of product groups
 Exports results in various formats for further analysis
 
 Project Structure
@@ -30,26 +31,38 @@ data_cooccurrence_analysis/
 │   │   ├── cooccurrence_network.png
 │   │   ├── cooccurrence_network_level1.png
 │   │   └── communities/           # Individual community visualizations
+│   ├── metrics/                   # Product group metrics
+│   │   ├── community_groups_evaluation.xlsx
+│   │   ├── table_groups_evaluation.xlsx
+│   │   └── custom_groups_evaluation.xlsx
+│   ├── metrics_visualizations/    # Metrics visualizations
+│   │   ├── strategy_comparison_radar.png
+│   │   ├── group_size_affinity_comparison.png
+│   │   └── pattern_coverage.png
 │   └── exports/                   # Other exports
 │       └── cooccurrence_network.graphml
 │
 ├── src/                           # Source code
-│   ├── __init__.py
+│   ├── init.py
 │   ├── data/                      # Data processing modules
-│   │   ├── __init__.py
+│   │   ├── init.py
 │   │   └── preprocessing.py       # Data loading and preprocessing functions
 │   │
 │   ├── analysis/                  # Analysis modules
-│   │   ├── __init__.py
+│   │   ├── init.py
 │   │   ├── cooccurrence.py        # Co-occurrence analysis functions
-│   │   └── clustering.py          # Community detection functions
+│   │   ├── clustering.py          # Community detection functions
+│   │   └── metrics.py             # Product group evaluation metrics
 │   │
 │   └── visualization/             # Visualization modules
-│       ├── __init__.py
+│       ├── init.py
 │       ├── heatmap.py             # Heatmap generation functions
-│       └── network.py             # Network graph functions
+│       ├── network.py             # Network graph functions
+│       └── metrics_viz.py         # Metrics visualization functions
 │
 ├── main.py                        # Main script that orchestrates the workflow
+├── evaluate_product_groups.py     # Script for evaluating product groups
+├── evaluate_with_visualizations.py # Script for evaluating with visualizations
 ├── config.py                      # Configuration settings
 ├── requirements.txt               # Project dependencies
 └── README.md                      # Project documentation
@@ -187,6 +200,68 @@ Functional domains: Elements that belong to the same business domain
 Report families: Elements that are typically used together in similar reports
 Data dependencies: Elements that have business or technical dependencies
 Optimization opportunities: Potential for report consolidation or standardization
+
+Product Group Metrics
+The project includes functionality to evaluate the viability of different product group strategies using quantitative metrics. This helps in making data-driven decisions about how to organize data elements into optimal groups.
+Metrics Overview
+Three primary metrics are used to assess product groups:
+Affinity Score
+
+Measures how often grouped elements are used together
+Higher scores indicate elements that frequently co-occur in reports
+Calculated as the average normalized co-occurrence rate between all pairs of elements
+Range: 0 to 1, with higher values being better
+
+Coverage Ratio
+
+Measures how well groups reflect common usage patterns
+Identifies common element combinations from the actual report data
+Calculates the percentage of these patterns fully covered by a single product group
+Higher scores indicate better satisfaction of user needs
+Range: 0 to 1, with higher values being better
+
+Redundancy Score
+
+Measures unnecessary overlaps between product groups
+Counts elements appearing in multiple groups
+Lower scores indicate better separation of concerns
+Range: 0 to 1, with lower values being better
+
+Quality Score
+
+Combined metric that balances affinity, coverage, and redundancy
+Higher scores indicate better overall grouping strategies
+
+Grouping Strategies
+The evaluation tools support comparing different product grouping strategies:
+
+Community-based: Groups derived from community detection algorithms
+Table-based: Groups based on database table structure
+Custom: User-defined groups or alternative grouping strategies
+
+Metrics Visualizations
+The metrics visualization module (src/visualization/metrics_viz.py) provides visual representations:
+
+Radar Charts: Compare strategies across all metrics
+Group Comparison Charts: Compare group sizes and affinity scores
+Overlap Visualizations: Identify redundant elements across groups
+Pattern Coverage Charts: Show how well common usage patterns are covered
+
+Using the Metrics
+To evaluate product groups:
+Copypython evaluate_with_visualizations.py
+This will generate:
+
+Excel files with detailed metrics for each grouping strategy
+Visualizations comparing the different strategies
+Summary statistics showing which approach performs best
+
+The results can be used to:
+
+Identify the optimal grouping strategy for your data
+Pinpoint specific improvements needed in your current grouping
+Understand which usage patterns are well-covered and which need attention
+Detect unnecessary redundancies that could be eliminated
 
 Community Detection Examples
 Example 1: Data Domains
