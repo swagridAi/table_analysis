@@ -31,7 +31,7 @@ class ResumableGridSearch:
     Grid search with checkpoint capability to allow resuming interrupted searches.
     """
     
-    def __init__(self, input_file, output_base_dir, param_ranges, max_combinations=None):
+    def __init__(self, input_file, output_base_dir, param_ranges, max_combinations=None, validate=True, force=False):
         """
         Initialize the resumable grid search.
         
@@ -40,11 +40,22 @@ class ResumableGridSearch:
             output_base_dir (str): Base directory for outputs
             param_ranges (dict): Dictionary with parameter names and ranges to explore
             max_combinations (int, optional): Maximum number of parameter combinations to try
+            validate (bool): Whether to run validation before starting
+            force (bool): Whether to force execution even if validation fails
         """
         self.input_file = input_file
         self.output_base_dir = output_base_dir
         self.param_ranges = param_ranges
         self.max_combinations = max_combinations
+        
+        # Run validation if requested
+        if validate:
+            from optimization_validation import run_optimization_validation
+            validation_passed = run_optimization_validation(
+                input_file, output_base_dir, param_ranges
+            )
+            if not validation_passed and not force:
+                raise ValueError("Validation failed. Use force=True to run anyway.")
         
         # Create necessary directories
         self.results_dir, self.viz_dir, self.logs_dir = self._ensure_directories_exist()
@@ -455,7 +466,7 @@ class ResumableGridSearch:
 
 def main():
     """
-    Main function to run resumable parameter optimization.
+    Main function to run parameter optimization.
     """
     parser = argparse.ArgumentParser(description='Run resumable parameter optimization')
     parser.add_argument('--input-file', '-i', default=None, 
@@ -464,6 +475,10 @@ def main():
                       help='Output directory (default: timestamp-based directory)')
     parser.add_argument('--max-combinations', '-m', type=int, default=None,
                       help='Maximum number of parameter combinations to try')
+    parser.add_argument('--no-validate', '-n', action='store_true',
+                      help='Skip validation checks')
+    parser.add_argument('--force', '-f', action='store_true',
+                      help='Force execution even if validation fails')
     
     args = parser.parse_args()
     
@@ -491,7 +506,9 @@ def main():
         input_file=input_file,
         output_base_dir=output_dir,
         param_ranges=param_ranges,
-        max_combinations=args.max_combinations or 50  # Default limit
+        max_combinations=args.max_combinations or 50,  # Default limit
+        validate=not args.no_validate,
+        force=args.force
     )
     
     # Run the search
