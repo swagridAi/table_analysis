@@ -508,11 +508,22 @@ class ResumableGridSearch:
         
         # Convert communities to product groups
         community_groups = self._convert_communities_to_groups(communities)
-        
+
+        # Convert CSR matrix to DataFrame before evaluation
+        if hasattr(self.cooccurrence_matrix, 'toarray') and not hasattr(self.cooccurrence_matrix, 'index'):
+            import pandas as pd
+            matrix_array = self.cooccurrence_matrix.toarray()
+            df_matrix = pd.DataFrame(matrix_array, 
+                                index=self.all_elements,
+                                columns=self.all_elements)
+            cooccurrence_matrix_to_use = df_matrix
+        else:
+            cooccurrence_matrix_to_use = self.cooccurrence_matrix
+
         # Evaluate product groups with current parameters
         metrics = evaluate_product_groups(
             community_groups, 
-            self.cooccurrence_matrix, 
+            cooccurrence_matrix_to_use,  # <-- Use the converted matrix here, not self.cooccurrence_matrix
             self.df_exploded, 
             report_count=self.report_count,
             min_pattern_frequency=min_pattern_frequency
