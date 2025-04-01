@@ -1,2 +1,0 @@
-combination_id,community_algorithm,community_resolution,min_pattern_frequency,quality_weight_coverage,quality_weight_redundancy,num_communities,avg_community_size,avg_affinity_score,coverage_ratio,weighted_coverage,redundancy_score,quality_score
-25,label_propagation,0.5,3.0,0.6,0.3,1,77.0,0.031801093643198906,1.0,1.0,0.0,0.6031801093643199
