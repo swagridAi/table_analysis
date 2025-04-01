@@ -400,9 +400,14 @@ class ResumableGridSearch:
                     
                 self._log_progress(f"Optimal parameters saved to {optimal_file} and {optimal_json}")
             
-            # Create visualizations
+            # Create visualizations using the external module
             if not results_df.empty:
-                self._create_parameter_influence_plots(results_df)
+                from src.visualization.parameter_plots import create_parameter_influence_plots
+                create_parameter_influence_plots(
+                    results_df, 
+                    self.viz_dir,
+                    logger=self._log_progress
+                )
             
             # Remove checkpoint file since search is complete
             if os.path.exists(self.checkpoint_file):
@@ -410,133 +415,13 @@ class ResumableGridSearch:
                 self._log_progress("Checkpoint file removed (search completed successfully).")
             
             return results_df, self.optimal_params
-            
+                
         except Exception as e:
             self._log_progress(f"Error during optimization: {str(e)}")
             self._save_checkpoint()
             self._log_progress(f"Search state saved to checkpoint. You can resume later.")
             raise
     
-    def _create_parameter_influence_plots(self, results_df):
-        """
-        Create visualizations showing how each parameter influences the metrics.
-        
-        Args:
-            results_df (pd.DataFrame): DataFrame with optimization results
-        """
-        if results_df.empty:
-            return
-        
-        # Numeric parameters to analyze
-        numeric_params = [
-            'community_resolution',
-            'min_pattern_frequency',
-            'quality_weight_coverage',
-            'quality_weight_redundancy'
-        ]
-        
-        # Filter to parameters that exist and vary
-        numeric_params = [p for p in numeric_params if p in results_df.columns and results_df[p].nunique() > 1]
-
-        # For each parameter, debug the types before sorting
-        for param in numeric_params:
-            values = results_df[param].tolist()
-            print(f"\nValues for parameter {param}:")
-            for i, v in enumerate(values[:5]):  # Show first 5 values
-                print(f"  Value {i}: '{v}' of type {type(v)}")
-            
-            try:
-                # Try to do operations that might trigger type errors
-                results_df[param].sort_values()
-            except TypeError as e:
-                debug_type_info(values[0], values[1], f"sorting parameter {param}")
-        
-        # Metrics to analyze
-        metrics = [
-            'num_communities', 
-            'avg_community_size',
-            'avg_affinity_score', 
-            'coverage_ratio', 
-            'redundancy_score', 
-            'quality_score'
-        ]
-        
-        # Filter to metrics that exist
-        metrics = [m for m in metrics if m in results_df.columns]
-        
-        # 1. Create parameter influence plots for each numeric parameter
-        for param in numeric_params:
-            plt.figure(figsize=(12, 10))
-            for i, metric in enumerate(metrics):
-                plt.subplot(3, 2, i+1)
-                
-                # Plot parameter vs metric
-                plt.scatter(results_df[param], results_df[metric], alpha=0.7)
-                
-                # Add trend line if there are enough points
-                if len(results_df) > 5:
-                    try:
-                        z = np.polyfit(results_df[param], results_df[metric], 1)
-                        p = np.poly1d(z)
-                        plt.plot(sorted(results_df[param].unique()), 
-                                p(sorted(results_df[param].unique())), 
-                                "r--", alpha=0.7)
-                    except:
-                        pass  # Skip trend line if there's an error
-                
-                plt.title(f"{param} vs {metric}")
-                plt.xlabel(param)
-                plt.ylabel(metric)
-                plt.grid(True, alpha=0.3)
-            
-            plt.tight_layout()
-            plt.savefig(os.path.join(self.viz_dir, f"parameter_influence_{param}.png"), dpi=300)
-            plt.close()
-        
-        # 2. Create algorithm comparison plot
-        if 'community_algorithm' in results_df.columns and results_df['community_algorithm'].nunique() > 1:
-            plt.figure(figsize=(14, 10))
-            
-            for i, metric in enumerate(metrics):
-                plt.subplot(3, 2, i+1)
-                
-                # Create box plot for this metric across algorithms
-                sns.boxplot(x='community_algorithm', y=metric, data=results_df)
-                plt.title(f"Algorithm vs {metric}")
-                plt.grid(True, alpha=0.3)
-                
-            plt.tight_layout()
-            plt.savefig(os.path.join(self.viz_dir, "algorithm_comparison.png"), dpi=300)
-            plt.close()
-        
-        # 3. Create correlation heatmap between parameters and metrics
-        # Combine parameters and metrics
-        cols_to_include = [c for c in numeric_params if c in results_df.columns and results_df[c].nunique() > 1] + metrics
-        if len(cols_to_include) > 1:  # Need at least 2 columns for correlation
-            corr_matrix = results_df[cols_to_include].corr()
-            
-            plt.figure(figsize=(12, 10))
-            sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
-            plt.title("Correlation between Parameters and Metrics")
-            plt.tight_layout()
-            plt.savefig(os.path.join(self.viz_dir, "parameter_metric_correlation.png"), dpi=300)
-            plt.close()
-        
-        # 4. Create quality score distribution
-        plt.figure(figsize=(10, 6))
-        sns.histplot(results_df['quality_score'], kde=True)
-        plt.axvline(results_df['quality_score'].max(), color='r', linestyle='--', 
-                    label=f'Maximum: {results_df["quality_score"].max():.4f}')
-        plt.title("Distribution of Quality Scores")
-        plt.xlabel("Quality Score")
-        plt.legend()
-        plt.grid(True, alpha=0.3)
-        plt.savefig(os.path.join(self.viz_dir, "quality_score_distribution.png"), dpi=300)
-        plt.close()
-        
-        self._log_progress(f"Parameter influence visualizations saved to {self.viz_dir}")
-
-
 
 def ensure_parameter_types(param_ranges):
     """Ensure all parameters have consistent types."""

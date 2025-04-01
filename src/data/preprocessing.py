@@ -49,7 +49,9 @@ def clean_data(df, required_columns=None, verbose=True):
     
     return df_clean
 
-def load_data(filepath, clean=True, required_columns=None, verbose=True):
+def load_data(filepath, clean=True, required_columns=None, verbose=True, 
+              delimiter=',', header=0, index_col=None, skiprows=None, 
+              na_values=None, parse_dates=False, low_memory=True, **kwargs):
     """
     Load data from CSV file with encoding detection and optional cleaning.
     
@@ -58,6 +60,14 @@ def load_data(filepath, clean=True, required_columns=None, verbose=True):
         clean (bool): Whether to clean the data (remove rows with missing values)
         required_columns (list, optional): List of columns that must have values for cleaning
         verbose (bool): Whether to print information about data loading and cleaning
+        delimiter (str): Delimiter to use for CSV file (default: ',')
+        header (int, list): Row number(s) to use as column names (default: 0)
+        index_col (int, str, list, None): Column(s) to use as index (default: None)
+        skiprows (int, list, callable): Rows to skip (default: None)
+        na_values (scalar, str, list, dict, None): Additional values to recognize as NA/NaN
+        parse_dates (bool, list, dict): Identify and parse date columns (False = no parsing)
+        low_memory (bool): Internally process the file in chunks (helps for large files)
+        **kwargs: Additional keyword arguments to pass to pandas.read_csv()
         
     Returns:
         pandas.DataFrame: Loaded and optionally cleaned dataframe
@@ -72,7 +82,19 @@ def load_data(filepath, clean=True, required_columns=None, verbose=True):
         try:
             if verbose:
                 print(f"Trying to load file with {encoding} encoding...")
-            df = pd.read_csv(filepath, encoding=encoding)
+            # Pass the explicit parameters and any additional kwargs to read_csv
+            df = pd.read_csv(
+                filepath, 
+                encoding=encoding,
+                delimiter=delimiter,
+                header=header,
+                index_col=index_col,
+                skiprows=skiprows,
+                na_values=na_values,
+                parse_dates=parse_dates,
+                low_memory=low_memory,
+                **kwargs
+            )
             break
         except UnicodeDecodeError:
             if verbose:
@@ -93,6 +115,9 @@ def load_data(filepath, clean=True, required_columns=None, verbose=True):
     # Print data summary
     if verbose:
         print(f"Loaded data with {len(df)} rows and {len(df.columns)} columns")
+        if df.shape[0] > 0:
+            memory_usage = df.memory_usage(deep=True).sum()
+            print(f"DataFrame memory usage: {memory_usage / 1048576:.2f} MB")
         
     return df
 
@@ -103,7 +128,7 @@ def create_exploded_dataframe(df):
     
     Args:
         df (pandas.DataFrame): Input dataframe with columns 'Data Element Table', 
-                               'Data Element Column', and 'Enterprise Report Catalog'
+                              'Data Element Column', and 'Enterprise Report Catalog'
         
     Returns:
         pandas.DataFrame: Exploded dataframe with columns 'Report', 'CriticalFlag', 
@@ -117,40 +142,44 @@ def create_exploded_dataframe(df):
     if missing_columns:
         raise ValueError(f"Required columns missing: {missing_columns}")
     
+    # Create a copy to avoid modifying the original dataframe
+    df = df.copy()
+    
     # Create a unique identifier for each data element
     df["data_element"] = df["Data Element Table"] + "." + df["Data Element Column"]
     
-    # Explode the dataframe by report
-    exploded_rows = []
-    for idx, row in df.iterrows():
-        # Handle NaN or non-string values in the reports column
-        reports_value = row["Enterprise Report Catalog"]
-        
-        # Skip if NaN
-        if pd.isna(reports_value):
-            continue
-            
-        # Convert to string if it's not already
-        if not isinstance(reports_value, str):
-            reports_value = str(reports_value)
-        
-        # Split by newline to get individual reports
-        reports = reports_value.strip().split("\n")
-        
-        # Skip empty reports
-        reports = [report.strip() for report in reports if report.strip()]
-        
-        for report in reports:
-            exploded_rows.append({
-                "Report": report,
-                "CriticalFlag": row.get("Critical Data Element", ""),
-                "Table": row["Data Element Table"],
-                "Column": row["Data Element Column"],
-                "data_element": row["data_element"]
-            })
+    # Filter out rows with NaN values in Enterprise Report Catalog
+    df_filtered = df.dropna(subset=["Enterprise Report Catalog"])
+    
+    # Convert Enterprise Report Catalog to string if it's not already
+    df_filtered["Enterprise Report Catalog"] = df_filtered["Enterprise Report Catalog"].astype(str)
+    
+    # Split the reports by newline and create lists
+    df_filtered["Reports_List"] = df_filtered["Enterprise Report Catalog"].str.strip().str.split('\n')
+    
+    # Explode the dataframe by the reports list
+    exploded_df = df_filtered.explode("Reports_List")
+    
+    # Clean up reports (remove empty strings)
+    exploded_df = exploded_df[exploded_df["Reports_List"].str.strip() != ""]
+    exploded_df["Reports_List"] = exploded_df["Reports_List"].str.strip()
     
     # Check if we have any exploded rows
-    if not exploded_rows:
+    if len(exploded_df) == 0:
         raise ValueError("No valid report-element pairs found after processing")
     
-    return pd.DataFrame(exploded_rows)
+    # Create the final dataframe with the desired columns
+    result_df = pd.DataFrame({
+        "Report": exploded_df["Reports_List"],
+        "Table": exploded_df["Data Element Table"],
+        "Column": exploded_df["Data Element Column"],
+        "data_element": exploded_df["data_element"]
+    })
+    
+    # Add the CriticalFlag column, defaulting to empty string if not present
+    if "Critical Data Element" in df.columns:
+        result_df["CriticalFlag"] = exploded_df["Critical Data Element"]
+    else:
+        result_df["CriticalFlag"] = ""
+    
+    return result_df
