@@ -1,0 +1,110 @@
+[2025-04-01 14:59:07] Starting new parameter optimization.
+[2025-04-01 14:59:07] Created grid with 50 parameter combinations.
+[2025-04-01 14:59:07] Memory usage Before data loading: 149.59 MB
+[2025-04-01 14:59:07] Loading and processing data in chunks...
+[2025-04-01 14:59:07] Encoding utf-8 failed, trying next...
+[2025-04-01 14:59:07] Found compatible encoding: latin-1
+[2025-04-01 14:59:07] Processing chunk 1...
+[2025-04-01 14:59:07] Memory usage After processing chunk 1: 150.12 MB
+[2025-04-01 14:59:07] Found 25 unique reports.
+[2025-04-01 14:59:07] Creating sparse co-occurrence matrix...
+[2025-04-01 14:59:07] Memory usage After creating co-occurrence matrix: 150.24 MB
+[2025-04-01 14:59:07] Creating network graph...
+[2025-04-01 14:59:07] Loading sample of 25 reports for metrics calculation...
+[2025-04-01 14:59:08] Memory usage After graph creation: 150.58 MB
+[2025-04-01 14:59:08] Search initialization complete.
+[2025-04-01 14:59:08] Graph contains 77 nodes and 393 edges.
+[2025-04-01 14:59:08] Memory usage Final: 150.58 MB
+[2025-04-01 14:59:08] Running parameter optimization with 50 total combinations.
+[2025-04-01 14:59:08] 0 already evaluated, 50 remaining.
+[2025-04-01 14:59:08] Testing combination 1/50: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.4, 'quality_weight_redundancy': 0.4}
+[2025-04-01 14:59:08] New optimal parameters found: label_propagation, resolution=1.5
+[2025-04-01 14:59:08] Testing combination 2/50: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 3.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.4}
+[2025-04-01 14:59:08] New optimal parameters found: label_propagation, resolution=2.0
+[2025-04-01 14:59:08] Testing combination 3/50: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.4}
+[2025-04-01 14:59:08] New optimal parameters found: louvain, resolution=2.0
+[2025-04-01 14:59:08] Testing combination 4/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:08] Testing combination 5/50: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:08] Testing combination 6/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.4, 'quality_weight_redundancy': 0.3}
+[2025-04-01 14:59:08] Testing combination 7/50: {'community_algorithm': 'label_propagation', 'community_resolution': 1.2, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:08] Testing combination 8/50: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:08] Testing combination 9/50: {'community_algorithm': 'label_propagation', 'community_resolution': 0.8, 'min_pattern_frequency': 3.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:08] New optimal parameters found: label_propagation, resolution=0.8
+[2025-04-01 14:59:08] Testing combination 10/50: {'community_algorithm': 'louvain', 'community_resolution': 0.8, 'min_pattern_frequency': 3.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 14:59:08] Testing combination 11/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.8, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.4}
+[2025-04-01 14:59:08] Testing combination 12/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.2, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:08] Testing combination 13/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.8, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.4, 'quality_weight_redundancy': 0.3}
+[2025-04-01 14:59:08] Testing combination 14/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.2, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:08] Testing combination 15/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 3.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.4}
+[2025-04-01 14:59:08] Testing combination 16/50: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 3.0, 'quality_weight_coverage': 0.4, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:08] Testing combination 17/50: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.4, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:08] Testing combination 18/50: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:08] Testing combination 19/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.2, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:08] Testing combination 20/50: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 3.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:08] Testing combination 21/50: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.4, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:08] Testing combination 22/50: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:08] Testing combination 23/50: {'community_algorithm': 'louvain', 'community_resolution': 0.8, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.3}
+[2025-04-01 14:59:08] Testing combination 24/50: {'community_algorithm': 'louvain', 'community_resolution': 0.8, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 14:59:09] Testing combination 25/50: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 3.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:09] Testing combination 26/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 3.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.4}
+[2025-04-01 14:59:09] New optimal parameters found: greedy_modularity, resolution=1.0
+[2025-04-01 14:59:09] Testing combination 27/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.8, 'min_pattern_frequency': 3.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.4}
+[2025-04-01 14:59:09] Testing combination 28/50: {'community_algorithm': 'label_propagation', 'community_resolution': 0.8, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.4, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:09] Testing combination 29/50: {'community_algorithm': 'label_propagation', 'community_resolution': 1.2, 'min_pattern_frequency': 3.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:09] Testing combination 30/50: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 3.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.3}
+[2025-04-01 14:59:09] New optimal parameters found: label_propagation, resolution=1.0
+[2025-04-01 14:59:09] Testing combination 31/50: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:09] Testing combination 32/50: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.4}
+[2025-04-01 14:59:09] Testing combination 33/50: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 14:59:09] Testing combination 34/50: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.4}
+[2025-04-01 14:59:09] Testing combination 35/50: {'community_algorithm': 'label_propagation', 'community_resolution': 1.2, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:09] Testing combination 36/50: {'community_algorithm': 'louvain', 'community_resolution': 0.8, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:09] Testing combination 37/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:09] Testing combination 38/50: {'community_algorithm': 'louvain', 'community_resolution': 0.8, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:09] Testing combination 39/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:09] Testing combination 40/50: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 3.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.3}
+[2025-04-01 14:59:09] New optimal parameters found: louvain, resolution=1.0
+[2025-04-01 14:59:09] Testing combination 41/50: {'community_algorithm': 'louvain', 'community_resolution': 0.8, 'min_pattern_frequency': 3.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:09] Testing combination 42/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:09] Testing combination 43/50: {'community_algorithm': 'label_propagation', 'community_resolution': 0.8, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:09] Testing combination 44/50: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:09] Testing combination 45/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 14:59:09] Testing combination 46/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.8, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:09] Testing combination 47/50: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 14:59:09] Testing combination 48/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.6, 'quality_weight_redundancy': 0.4}
+[2025-04-01 14:59:10] Testing combination 49/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.6}
+[2025-04-01 14:59:10] Testing combination 50/50: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 14:59:10] Parameter optimization complete!
+[2025-04-01 14:59:10] Results saved to optimization_results\results\optimization_results.csv
+[2025-04-01 14:59:10] Optimal parameters saved to optimization_results\results\optimal_parameters.csv and optimization_results\results\optimal_parameters.json
+[2025-04-01 14:59:10] 
+Values for parameter community_resolution:
+[2025-04-01 14:59:10]   Value 0: '1.5' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 1: '2.0' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 2: '2.0' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 3: '2.0' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 4: '0.5' of type <class 'float'>
+[2025-04-01 14:59:10] 
+Values for parameter min_pattern_frequency:
+[2025-04-01 14:59:10]   Value 0: '4.0' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 1: '3.0' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 2: '2.0' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 3: '4.0' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 4: '2.0' of type <class 'float'>
+[2025-04-01 14:59:10] 
+Values for parameter quality_weight_coverage:
+[2025-04-01 14:59:10]   Value 0: '0.4' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 1: '0.3' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 2: '0.6' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 3: '0.5' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 4: '0.3' of type <class 'float'>
+[2025-04-01 14:59:10] 
+Values for parameter quality_weight_redundancy:
+[2025-04-01 14:59:10]   Value 0: '0.4' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 1: '0.4' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 2: '0.4' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 3: '0.6' of type <class 'float'>
+[2025-04-01 14:59:10]   Value 4: '0.5' of type <class 'float'>
+[2025-04-01 14:59:19] Parameter influence visualizations saved to optimization_results\visualizations
+[2025-04-01 14:59:19] Visualizations created successfully.
+[2025-04-01 14:59:19] Checkpoint file removed (search completed successfully).

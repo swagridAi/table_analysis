@@ -265,9 +265,29 @@ class ResumableGridSearch:
         
         # Track how many chunks we've processed
         chunk_count = 0
+
+        # Before the chunk processing loop, add encoding detection:
+        encodings_to_try = ['utf-8', 'latin-1', 'cp1252', 'ISO-8859-1']
+        successful_encoding = None
+
+        for encoding in encodings_to_try:
+            try:
+                # Try reading a small portion of the file
+                with open(self.input_file, 'r', encoding=encoding) as f:
+                    f.read(1024)
+                successful_encoding = encoding
+                self._log_progress(f"Found compatible encoding: {encoding}")
+                break
+            except UnicodeDecodeError:
+                self._log_progress(f"Encoding {encoding} failed, trying next...")
+                continue
+
+        if not successful_encoding:
+            raise ValueError(f"Could not decode the file with any of: {encodings_to_try}")
         
-        # Process file in chunks to reduce memory usage
-        for chunk in pd.read_csv(self.input_file, chunksize=chunk_size, usecols=required_columns):
+        # Now use the successful encoding with pandas:
+        for chunk in pd.read_csv(self.input_file, chunksize=chunk_size, 
+                                usecols=required_columns, encoding=successful_encoding):
             chunk_count += 1
             self._log_progress(f"Processing chunk {chunk_count}...")
             
@@ -394,7 +414,7 @@ class ResumableGridSearch:
         sample_size = min(50000, self.report_count)  # Limit size for memory efficiency
         self._log_progress(f"Loading sample of {sample_size} reports for metrics calculation...")
         
-        df_sample = pd.read_csv(self.input_file, nrows=sample_size, usecols=required_columns)
+        df_sample = pd.read_csv(self.input_file, nrows=sample_size, usecols=required_columns, encoding=successful_encoding)
         self.df_exploded = create_exploded_dataframe(df_sample)
         
         log_memory_usage("After graph creation")

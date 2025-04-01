@@ -285,8 +285,3 @@ Report 6
 Report 13
 Report 9",Y,dbo.Table5,att_13
 Report 11,Y,dbo.Table7,att_17
-Report 21 - Análisis,Y,dbo.Table9,att_21
-Report 22 - Résumé,N,dbo.Table10,att_22
-Report 23 - Niño,Y,dbo.Table11,att_23
-Report 24 - São Paulo,N,dbo.Table12,att_24
-Report 25 - München,Y,dbo.Table13,att_25
