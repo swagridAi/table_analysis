@@ -224,8 +224,23 @@ class ResumableGridSearch:
     
     def initialize_search(self):
         """
-        Initialize the grid search by loading data and setting up parameter combinations.
+        Initialize the grid search by loading data and setting up parameter combinations
+        with memory-efficient processing.
         """
+        import gc
+        import psutil
+        import os
+        from scipy import sparse
+        from networkx import Graph
+        
+        # Setup memory monitoring
+        def log_memory_usage(label=""):
+            """Log current memory usage."""
+            process = psutil.Process(os.getpid())
+            memory_info = process.memory_info()
+            memory_mb = memory_info.rss / (1024 * 1024)
+            self._log_progress(f"Memory usage {label}: {memory_mb:.2f} MB")
+        
         # Check if we can resume from checkpoint
         if self._load_checkpoint():
             self._log_progress(f"Resuming search from checkpoint. {len(self.results)} combinations already evaluated, {len(self.pending_combinations)} pending.")
@@ -235,28 +250,163 @@ class ResumableGridSearch:
             self.pending_combinations = self._create_parameter_grid()
             self._log_progress(f"Created grid with {len(self.pending_combinations)} parameter combinations.")
         
-        # Load and preprocess data (only need to do this once)
-        self._log_progress("Loading and processing data...")
-        df = load_data(self.input_file)
-        self.df_exploded = create_exploded_dataframe(df)
+        log_memory_usage("Before data loading")
         
-        # Calculate co-occurrence (only need to do this once)
-        self._log_progress("Calculating co-occurrence matrix...")
-        co_occurrence = calculate_cooccurrence(self.df_exploded)
-        self.cooccurrence_matrix, all_elements = create_cooccurrence_matrix(co_occurrence)
+        # Determine required columns to reduce memory footprint
+        required_columns = ["Data Element Table", "Data Element Column", "Enterprise Report Catalog"]
         
-        # Get total number of reports for normalization
-        self.report_count = self.df_exploded['Report'].nunique()
+        # Process data in chunks instead of loading all at once
+        self._log_progress("Loading and processing data in chunks...")
+        chunk_size = 10000  # Adjust based on available memory and dataset size
         
-        # Create network graph (we'll reuse this for each parameter combination)
+        # Initialize co-occurrence dictionary with frequency tracking
+        co_occurrence = {}
+        report_set = set()  # Track unique reports
+        
+        # Track how many chunks we've processed
+        chunk_count = 0
+        
+        # Process file in chunks to reduce memory usage
+        for chunk in pd.read_csv(self.input_file, chunksize=chunk_size, usecols=required_columns):
+            chunk_count += 1
+            self._log_progress(f"Processing chunk {chunk_count}...")
+            
+            # Process this chunk
+            chunk_exploded = create_exploded_dataframe(chunk)
+            
+            # Track unique reports
+            report_set.update(chunk_exploded['Report'].unique())
+            
+            # Calculate co-occurrence for this chunk
+            chunk_cooc = calculate_cooccurrence(chunk_exploded)
+            
+            # Merge with existing co-occurrence data
+            for key, count in chunk_cooc.items():
+                co_occurrence[key] = co_occurrence.get(key, 0) + count
+            
+            # Clear chunk data to free memory
+            del chunk
+            del chunk_exploded
+            del chunk_cooc
+            gc.collect()
+            
+            log_memory_usage(f"After processing chunk {chunk_count}")
+        
+        # Store the total report count
+        self.report_count = len(report_set)
+        self._log_progress(f"Found {self.report_count} unique reports.")
+        
+        # Use disk-based storage for very large datasets
+        use_disk_storage = len(co_occurrence) > 1000000  # Threshold for disk storage
+        
+        if use_disk_storage:
+            # Store co-occurrence data on disk
+            from src.utils.disk_storage import DiskBasedCooccurrenceMatrix
+            matrix_file = os.path.join(self.output_base_dir, "cooccurrence_matrix.h5")
+            self._log_progress(f"Using disk-based storage for co-occurrence matrix: {matrix_file}")
+            self.matrix_storage = DiskBasedCooccurrenceMatrix(matrix_file)
+            self.matrix_storage.store_matrix(co_occurrence)
+            self.all_elements = self.matrix_storage.all_elements
+            self.cooccurrence_matrix = None  # Not using in-memory matrix
+        else:
+            # Create sparse co-occurrence matrix
+            self._log_progress("Creating sparse co-occurrence matrix...")
+            
+            # Get all unique elements
+            all_elements = sorted(set(elem for pair in co_occurrence.keys() for elem in pair))
+            self.all_elements = all_elements
+            elem_to_idx = {elem: i for i, elem in enumerate(all_elements)}
+            
+            # Create sparse matrix in COO format (memory efficient for construction)
+            rows = []
+            cols = []
+            data = []
+            
+            for (elem1, elem2), count in co_occurrence.items():
+                i = elem_to_idx[elem1]
+                j = elem_to_idx[elem2]
+                rows.append(i)
+                cols.append(j)
+                data.append(count)
+                # Also add symmetric entry
+                rows.append(j)
+                cols.append(i)
+                data.append(count)
+            
+            # Create sparse matrix
+            n = len(all_elements)
+            matrix = sparse.coo_matrix((data, (rows, cols)), shape=(n, n))
+            
+            # Convert to CSR format for efficient operations
+            self.cooccurrence_matrix = matrix.tocsr()
+            self.matrix_storage = None  # Not using disk storage
+        
+        log_memory_usage("After creating co-occurrence matrix")
+        
+        # Clear raw co-occurrence dictionary to save memory
+        del co_occurrence
+        gc.collect()
+        
+        # Create memory-efficient network graph (filtering low-frequency edges)
         self._log_progress("Creating network graph...")
-        from networkx import Graph
+        min_edge_weight = 2  # Only include edges with weight >= 2
         self.G = Graph()
-        for (elem1, elem2), count in co_occurrence.items():
-            self.G.add_edge(elem1, elem2, weight=count)
         
+        # Add nodes and edges efficiently
+        if use_disk_storage:
+            # Add nodes first
+            for elem in self.all_elements:
+                self.G.add_node(elem)
+            
+            # Add edges from disk storage (using memory-efficient approach)
+            rows = self.matrix_storage.file['matrix/rows'][()]
+            cols = self.matrix_storage.file['matrix/cols'][()]
+            data = self.matrix_storage.file['matrix/data'][()]
+            
+            # Process in chunks to avoid memory issues
+            chunk_size = 100000
+            for i in range(0, len(rows), chunk_size):
+                end = min(i + chunk_size, len(rows))
+                for idx in range(i, end):
+                    if data[idx] >= min_edge_weight:
+                        row_idx = rows[idx]
+                        col_idx = cols[idx]
+                        # Only add each edge once (avoid duplicates from symmetric matrix)
+                        if row_idx < col_idx:
+                            elem1 = self.all_elements[row_idx]
+                            elem2 = self.all_elements[col_idx]
+                            self.G.add_edge(elem1, elem2, weight=data[idx])
+        else:
+            # Add nodes and edges from sparse matrix
+            for elem in self.all_elements:
+                self.G.add_node(elem)
+            
+            # Get edges from sparse matrix
+            cx = self.cooccurrence_matrix.tocoo()
+            for i, j, v in zip(cx.row, cx.col, cx.data):
+                if i < j and v >= min_edge_weight:  # Add each edge only once
+                    elem1 = self.all_elements[i]
+                    elem2 = self.all_elements[j]
+                    self.G.add_edge(elem1, elem2, weight=v)
+        
+        # Keep a small exploded dataframe for pattern evaluation
+        # Load a small sample for metrics calculation
+        sample_size = min(50000, self.report_count)  # Limit size for memory efficiency
+        self._log_progress(f"Loading sample of {sample_size} reports for metrics calculation...")
+        
+        df_sample = pd.read_csv(self.input_file, nrows=sample_size, usecols=required_columns)
+        self.df_exploded = create_exploded_dataframe(df_sample)
+        
+        log_memory_usage("After graph creation")
+        
+        # Mark initialization as complete
         self.search_initialized = True
         self._log_progress("Search initialization complete.")
+        self._log_progress(f"Graph contains {self.G.number_of_nodes()} nodes and {self.G.number_of_edges()} edges.")
+        
+        # Final garbage collection
+        gc.collect()
+        log_memory_usage("Final")
     
     def run(self):
         """
@@ -273,146 +423,11 @@ class ResumableGridSearch:
         self._log_progress(f"{len(self.results)} already evaluated, {len(self.pending_combinations)} remaining.")
         
         try:
-            # Iterate through remaining parameter combinations
-            while self.pending_combinations:
-                # Get next combination
-                params = self.pending_combinations.pop(0)
-                
-                self.iterations_completed += 1
-                self._log_progress(f"Testing combination {self.iterations_completed}/{total_combinations}: {params}")
-                
-                try:
-                    # Extract parameters
-                    try:
-                        community_algorithm = params.get('community_algorithm', config.COMMUNITY_ALGORITHM)
-                        community_resolution = params.get('community_resolution', config.COMMUNITY_RESOLUTION)
-                        min_pattern_frequency = params.get('min_pattern_frequency', 2)
-                        quality_weight_coverage = params.get('quality_weight_coverage', 0.5)
-                        quality_weight_redundancy = params.get('quality_weight_redundancy', 0.5)
-                        
-                        # Add type debugging
-                        print("\nParameter types:")
-                        print(f"community_resolution: {type(community_resolution)}")
-                        print(f"min_pattern_frequency: {type(min_pattern_frequency)}")
-                        print(f"quality_weight_coverage: {type(quality_weight_coverage)}")
-                        print(f"quality_weight_redundancy: {type(quality_weight_redundancy)}")
-                        
-                    except Exception as e:
-                        print(f"Error extracting parameters: {str(e)}")
-                        # Print all parameters for debugging
-                        for k, v in params.items():
-                            print(f"  {k}: '{v}' of type {type(v)}")
-                        continue
-                    
-                    # Detect communities with current parameters
-                    communities = detect_communities(
-                        self.G, 
-                        algorithm=community_algorithm,
-                        resolution=community_resolution
-                    )
-                    
-                    # Convert communities to product groups
-                    community_groups = []
-                    for community_id in set(communities.values()):
-                        group = [node for node, c_id in communities.items() if c_id == community_id]
-                        community_groups.append(group)
-                    
-                    # Evaluate product groups with current parameters
-                    metrics = evaluate_product_groups(
-                        community_groups, 
-                        self.cooccurrence_matrix, 
-                        self.df_exploded, 
-                        report_count=self.report_count,
-                        min_pattern_frequency=min_pattern_frequency
-                    )
-                    
-                    # Calculate custom quality score if weights are provided
-                    avg_affinity = np.mean([g["affinity_score"] for g in metrics["group_metrics"]])
-                    coverage = metrics["overall_metrics"]["weighted_coverage"]
-                    redundancy = metrics["overall_metrics"]["redundancy_score"]
-                    
-                    # Weighted quality score
-                    quality_score = (avg_affinity * (1-quality_weight_coverage-quality_weight_redundancy) + 
-                                    coverage * quality_weight_coverage) * (1 - redundancy * quality_weight_redundancy)
-                    
-                    # Store results
-                    result = {
-                        'combination_id': self.iterations_completed,
-                        'community_algorithm': community_algorithm,
-                        'community_resolution': community_resolution,
-                        'min_pattern_frequency': min_pattern_frequency,
-                        'quality_weight_coverage': quality_weight_coverage,
-                        'quality_weight_redundancy': quality_weight_redundancy,
-                        'num_communities': len(community_groups),
-                        'avg_community_size': np.mean([len(g) for g in community_groups]),
-                        'avg_affinity_score': avg_affinity,
-                        'coverage_ratio': metrics["overall_metrics"]["coverage_ratio"],
-                        'weighted_coverage': coverage,
-                        'redundancy_score': redundancy,
-                        'quality_score': quality_score
-                    }
-                    
-                    self.results.append(result)
-                    
-                    # Update optimal parameters if this is the best result so far
-                    current_score = quality_score
-                    previous_best = self.optimal_params.get('quality_score', 0) if self.optimal_params else 0
-
-                    try:
-                        if not self.optimal_params or current_score > previous_best:
-                            self.optimal_params = result
-                            self._log_progress(f"New optimal parameters found: {community_algorithm}, resolution={community_resolution}")
-                    except TypeError as e:
-                        # Debug the comparison that failed
-                        debug_type_info(current_score, previous_best, "optimal parameter comparison")
-                        # Force conversion to make comparison work
-                        if not self.optimal_params or float(current_score) > float(previous_best):
-                            self.optimal_params = result
-                            self._log_progress(f"New optimal parameters found after type correction")
-                    
-                except Exception as e:
-                    self._log_progress(f"Error with parameters {params}: {str(e)}")
-                
-                # Save checkpoint after each iteration
-                if self.iterations_completed % 5 == 0:  # Save every 5 iterations
-                    self._save_checkpoint()
+            # Process all pending parameter combinations
+            self._process_parameter_combinations(total_combinations)
             
-            # All combinations evaluated, create final output
-            self._log_progress("Parameter optimization complete!")
-            
-            # Convert results to DataFrame
-            results_df = pd.DataFrame(self.results)
-            
-            # Save all results
-            results_file = os.path.join(self.results_dir, "optimization_results.csv")
-            results_df.to_csv(results_file, index=False)
-            self._log_progress(f"Results saved to {results_file}")
-            
-            # Save optimal parameters
-            if self.optimal_params:
-                optimal_file = os.path.join(self.results_dir, "optimal_parameters.csv")
-                pd.DataFrame([self.optimal_params]).to_csv(optimal_file, index=False)
-                
-                # Also save as JSON for easier loading
-                optimal_json = os.path.join(self.results_dir, "optimal_parameters.json")
-                with open(optimal_json, 'w') as f:
-                    json.dump(self.optimal_params, f, indent=2)
-                    
-                self._log_progress(f"Optimal parameters saved to {optimal_file} and {optimal_json}")
-            
-            # Create visualizations using the external module
-            if not results_df.empty:
-                from src.visualization.parameter_plots import create_parameter_influence_plots
-                create_parameter_influence_plots(
-                    results_df, 
-                    self.viz_dir,
-                    logger=self._log_progress
-                )
-            
-            # Remove checkpoint file since search is complete
-            if os.path.exists(self.checkpoint_file):
-                os.remove(self.checkpoint_file)
-                self._log_progress("Checkpoint file removed (search completed successfully).")
+            # Generate final outputs
+            results_df = self._generate_final_outputs()
             
             return results_df, self.optimal_params
                 
@@ -421,6 +436,236 @@ class ResumableGridSearch:
             self._save_checkpoint()
             self._log_progress(f"Search state saved to checkpoint. You can resume later.")
             raise
+
+    def _process_parameter_combinations(self, total_combinations):
+        """
+        Process all pending parameter combinations.
+        
+        Args:
+            total_combinations (int): Total number of combinations to process
+        """
+        # Iterate through remaining parameter combinations
+        while self.pending_combinations:
+            # Get next combination
+            params = self.pending_combinations.pop(0)
+            
+            self.iterations_completed += 1
+            self._log_progress(f"Testing combination {self.iterations_completed}/{total_combinations}: {params}")
+            
+            try:
+                # Evaluate the current parameter combination
+                result = self._evaluate_parameter_combination(params)
+                
+                if result:
+                    self.results.append(result)
+                    # Update optimal parameters
+                    self._update_optimal_parameters(result)
+            
+            except Exception as e:
+                self._log_progress(f"Error with parameters {params}: {str(e)}")
+            
+            # Save checkpoint periodically
+            if self.iterations_completed % 5 == 0:  # Save every 5 iterations
+                self._save_checkpoint()
+
+    def _evaluate_parameter_combination(self, params):
+        """
+        Evaluate a single parameter combination.
+        
+        Args:
+            params (dict): Parameter combination to evaluate
+            
+        Returns:
+            dict: Results for this parameter combination, or None if evaluation failed
+        """
+        try:
+            # Extract parameters
+            community_algorithm = params.get('community_algorithm', config.COMMUNITY_ALGORITHM)
+            community_resolution = params.get('community_resolution', config.COMMUNITY_RESOLUTION)
+            min_pattern_frequency = params.get('min_pattern_frequency', 2)
+            quality_weight_coverage = params.get('quality_weight_coverage', 0.5)
+            quality_weight_redundancy = params.get('quality_weight_redundancy', 0.5)
+            
+            # Ensure parameter types
+            community_resolution = float(community_resolution)
+            min_pattern_frequency = float(min_pattern_frequency)
+            quality_weight_coverage = float(quality_weight_coverage)
+            quality_weight_redundancy = float(quality_weight_redundancy)
+            
+        except Exception as e:
+            self._log_progress(f"Error extracting parameters: {str(e)}")
+            # Print all parameters for debugging
+            for k, v in params.items():
+                self._log_progress(f"  {k}: '{v}' of type {type(v)}")
+            return None
+        
+        # Detect communities with current parameters
+        communities = detect_communities(
+            self.G, 
+            algorithm=community_algorithm,
+            resolution=community_resolution
+        )
+        
+        # Convert communities to product groups
+        community_groups = self._convert_communities_to_groups(communities)
+        
+        # Evaluate product groups with current parameters
+        metrics = evaluate_product_groups(
+            community_groups, 
+            self.cooccurrence_matrix, 
+            self.df_exploded, 
+            report_count=self.report_count,
+            min_pattern_frequency=min_pattern_frequency
+        )
+        
+        # Calculate quality metrics
+        result = self._calculate_quality_metrics(
+            metrics, community_groups, 
+            community_algorithm, community_resolution, 
+            min_pattern_frequency, quality_weight_coverage, quality_weight_redundancy
+        )
+        
+        return result
+
+    def _convert_communities_to_groups(self, communities):
+        """
+        Convert communities dictionary to list of community groups.
+        
+        Args:
+            communities (dict): Dictionary mapping nodes to community IDs
+            
+        Returns:
+            list: List of community groups, where each group is a list of nodes
+        """
+        community_groups = []
+        for community_id in set(communities.values()):
+            group = [node for node, c_id in communities.items() if c_id == community_id]
+            community_groups.append(group)
+        
+        return community_groups
+
+    def _calculate_quality_metrics(self, metrics, community_groups, 
+                                community_algorithm, community_resolution,
+                                min_pattern_frequency, quality_weight_coverage, quality_weight_redundancy):
+        """
+        Calculate quality metrics for the current parameter combination.
+        
+        Args:
+            metrics (dict): Metrics from evaluate_product_groups
+            community_groups (list): List of community groups
+            community_algorithm (str): Community detection algorithm used
+            community_resolution (float): Resolution parameter
+            min_pattern_frequency (float): Minimum pattern frequency
+            quality_weight_coverage (float): Weight for coverage in quality score
+            quality_weight_redundancy (float): Weight for redundancy in quality score
+            
+        Returns:
+            dict: Result dictionary with all metrics
+        """
+        # Calculate metrics
+        avg_affinity = np.mean([g["affinity_score"] for g in metrics["group_metrics"]])
+        coverage = metrics["overall_metrics"]["weighted_coverage"]
+        redundancy = metrics["overall_metrics"]["redundancy_score"]
+        
+        # Weighted quality score
+        quality_score = (avg_affinity * (1-quality_weight_coverage-quality_weight_redundancy) + 
+                        coverage * quality_weight_coverage) * (1 - redundancy * quality_weight_redundancy)
+        
+        # Store results
+        result = {
+            'combination_id': self.iterations_completed,
+            'community_algorithm': community_algorithm,
+            'community_resolution': float(community_resolution),
+            'min_pattern_frequency': float(min_pattern_frequency),
+            'quality_weight_coverage': float(quality_weight_coverage),
+            'quality_weight_redundancy': float(quality_weight_redundancy),
+            'num_communities': len(community_groups),
+            'avg_community_size': np.mean([len(g) for g in community_groups]),
+            'avg_affinity_score': float(avg_affinity),
+            'coverage_ratio': float(metrics["overall_metrics"]["coverage_ratio"]),
+            'weighted_coverage': float(coverage),
+            'redundancy_score': float(redundancy),
+            'quality_score': float(quality_score)
+        }
+        
+        return result
+
+    def _update_optimal_parameters(self, result):
+        """
+        Update optimal parameters if the current result is better.
+        
+        Args:
+            result (dict): Current result to evaluate
+        """
+        current_score = float(result['quality_score'])
+        previous_best = float(self.optimal_params['quality_score']) if self.optimal_params else 0
+
+        if not self.optimal_params or current_score > previous_best:
+            self.optimal_params = result
+            self._log_progress(f"New optimal parameters found: {result['community_algorithm']}, resolution={result['community_resolution']}")
+
+    def _generate_final_outputs(self):
+        """
+        Generate and save final outputs after optimization is complete.
+        
+        Returns:
+            pd.DataFrame: DataFrame with all results
+        """
+        self._log_progress("Parameter optimization complete!")
+        
+        # Convert results to DataFrame
+        results_df = pd.DataFrame(self.results)
+        
+        # Save all results
+        if not results_df.empty:
+            results_file = os.path.join(self.results_dir, "optimization_results.csv")
+            results_df.to_csv(results_file, index=False)
+            self._log_progress(f"Results saved to {results_file}")
+        
+        # Save optimal parameters
+        if self.optimal_params:
+            self._save_optimal_parameters()
+        
+        # Create visualizations if we have results
+        if not results_df.empty:
+            self._create_visualizations(results_df)
+        
+        # Remove checkpoint file since search is complete
+        if os.path.exists(self.checkpoint_file):
+            os.remove(self.checkpoint_file)
+            self._log_progress("Checkpoint file removed (search completed successfully).")
+        
+        return results_df
+
+    def _save_optimal_parameters(self):
+        """Save optimal parameters to CSV and JSON files."""
+        optimal_file = os.path.join(self.results_dir, "optimal_parameters.csv")
+        pd.DataFrame([self.optimal_params]).to_csv(optimal_file, index=False)
+        
+        # Also save as JSON for easier loading
+        optimal_json = os.path.join(self.results_dir, "optimal_parameters.json")
+        with open(optimal_json, 'w') as f:
+            json.dump(self.optimal_params, f, indent=2)
+            
+        self._log_progress(f"Optimal parameters saved to {optimal_file} and {optimal_json}")
+
+    def _create_visualizations(self, results_df):
+        """
+        Create visualizations from optimization results.
+        
+        Args:
+            results_df (pd.DataFrame): DataFrame with optimization results
+        """
+        try:
+            from src.visualization.parameter_plots import create_parameter_influence_plots
+            create_parameter_influence_plots(
+                results_df, 
+                self.viz_dir,
+                logger=self._log_progress
+            )
+            self._log_progress("Visualizations created successfully.")
+        except Exception as e:
+            self._log_progress(f"Error creating visualizations: {str(e)}")
     
 
 def ensure_parameter_types(param_ranges):
