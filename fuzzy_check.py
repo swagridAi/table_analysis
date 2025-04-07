@@ -576,8 +576,8 @@ def main():
     analyzer = ParameterSweepAnalysis()
     
     # Define parameter grid
-    cluster_range = range(3, 15)  # 3 to 14 clusters
-    fuzziness_range = (1.3, 2.7)  # Range of fuzziness values
+    cluster_range = range(3, 4)  # 3 to 14 clusters
+    fuzziness_range = (1.3, 1.5)  # Range of fuzziness values
     param_grid = analyzer.generate_parameter_grid(cluster_range, fuzziness_range)
     
     # Run parameter sweep
