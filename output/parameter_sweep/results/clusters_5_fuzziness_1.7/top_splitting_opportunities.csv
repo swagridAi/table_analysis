@@ -1,6 +1,0 @@
-report,element_count,community_count,entropy,opportunity_type,top_communities,impact_score
-Report 12,21,3,1.3566695198333112,splitting,"{0: 10, 3: 9, 2: 2}",2.8490059916499537
-Report 5,12,4,1.855388542207534,splitting,"{3: 4, 0: 4, 2: 3}",2.226466250649041
-Report 18,14,3,1.5774062828523454,splitting,"{2: 5, 0: 5, 3: 4}",2.2083687959932834
-Report 14,11,4,1.867633890971212,splitting,"{4: 4, 3: 3, 0: 3}",2.054397280068333
-Report 10,14,3,1.4315602842833155,splitting,"{2: 7, 0: 5, 3: 2}",2.0041843979966414

@@ -327,6 +327,12 @@ class ParameterSweepAnalysis:
                 }
                 
                 self.results.append(result)
+
+                # Add this to save membership values to CSV
+                membership_df = pd.DataFrame(membership_values)
+                membership_file = os.path.join(run_dir, "fuzzy_membership_values.csv")
+                membership_df.to_csv(membership_file)
+                print(f"  Saved membership values to {membership_file}")
                 
                 # Save detailed results for this run
                 self.save_output(result, "summary.json", directory=run_dir)

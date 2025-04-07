@@ -1,2 +1,0 @@
-run_id,params,community_balance,report_metrics,opportunity_metrics
-clusters_5_fuzziness_1.7,"{'num_clusters': 5, 'fuzziness': 1.6500000000000001}","{'is_balanced': False, 'size_variation': 0.9746751083692883, 'max_community_percent': 0.45454545454545453, 'min_community_percent': 0.025974025974025976, 'num_communities': 5, 'sizes': {0: 28, 3: 35, 2: 7, 4: 5, 1: 2}}","{'total_reports': 20, 'aligned_reports': 4, 'fragmented_reports': 16, 'alignment_score': 0.2}","{'consolidation_count': 1, 'splitting_count': 5, 'opportunity_score': 0.225}"

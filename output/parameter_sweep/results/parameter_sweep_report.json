@@ -1,2 +1,2 @@
 best_parameters,parameter_combinations_tested,run_date
-"{'opportunity_score': {'num_clusters': 3, 'fuzziness': 1.3, 'run_id': 'clusters_3_fuzziness_1.3', 'score': 0.325}, 'alignment_score': {'num_clusters': 3, 'fuzziness': 1.3, 'run_id': 'clusters_3_fuzziness_1.3', 'score': 0.3}, 'consolidation': {'num_clusters': 3, 'fuzziness': 1.4, 'run_id': 'clusters_3_fuzziness_1.4', 'score': 2}}",5,2025-04-07 12:17:33
+"{'opportunity_score': {'num_clusters': 3, 'fuzziness': 1.3, 'run_id': 'clusters_3_fuzziness_1.3', 'score': 0.325}, 'alignment_score': {'num_clusters': 3, 'fuzziness': 1.3, 'run_id': 'clusters_3_fuzziness_1.3', 'score': 0.3}, 'consolidation': {'num_clusters': 3, 'fuzziness': 1.4, 'run_id': 'clusters_3_fuzziness_1.4', 'score': 2}}",5,2025-04-07 14:27:20
