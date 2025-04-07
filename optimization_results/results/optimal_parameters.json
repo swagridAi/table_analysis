@@ -1,0 +1,15 @@
+{
+  "combination_id": 38,
+  "community_algorithm": "label_propagation",
+  "community_resolution": 0.5,
+  "min_pattern_frequency": 2.0,
+  "quality_weight_coverage": 0.8,
+  "quality_weight_redundancy": 0.3,
+  "num_communities": 16,
+  "avg_community_size": 4.8125,
+  "avg_affinity_score": 0.002184029613960867,
+  "coverage_ratio": 1.0,
+  "weighted_coverage": 1.0,
+  "redundancy_score": 0.0,
+  "quality_score": 0.799781597038604
+}

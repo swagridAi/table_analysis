@@ -218,3 +218,95 @@ def visualize_community_subgraphs(G, communities, output_dir, prefix="community_
         # Save the figure
         plt.savefig(output_file, dpi=dpi)
         plt.close()
+
+def visualize_fuzzy_communities(G, membership_values, output_file=None, dpi=None, threshold=0.2):
+    """
+    Visualize network with fuzzy community memberships using pie charts for nodes.
+    
+    Args:
+        G (networkx.Graph): Network graph
+        membership_values (dict): Mapping of nodes to membership values
+        output_file (str, optional): Path to save visualization
+        dpi (int): DPI for saved image
+        threshold (float): Minimum membership value to include in visualization
+    """
+    import matplotlib.pyplot as plt
+    import matplotlib.patches as mpatches
+    import numpy as np
+    
+    # Use default DPI from config if not specified
+    dpi = dpi or config.NETWORK_DPI
+    
+    # Create figure
+    plt.figure(figsize=(14, 12))
+    
+    # Position nodes using force-directed layout
+    pos = nx.spring_layout(
+        G, 
+        k=config.NETWORK_LAYOUT_K, 
+        iterations=config.NETWORK_ITERATIONS,
+        seed=config.NETWORK_LAYOUT_SEED
+    )
+    
+    # Draw edges
+    nx.draw_networkx_edges(
+        G, pos, 
+        alpha=0.3, 
+        width=0.5,
+        edge_color=config.EDGE_COLOR
+    )
+    
+    # Get number of communities
+    num_communities = max(max(memb.keys()) for memb in membership_values.values()) + 1
+    
+    # Community colors from colormap
+    cmap = plt.cm.get_cmap('tab10', num_communities)
+    community_colors = [cmap(i) for i in range(num_communities)]
+    
+    # Draw nodes as pie charts showing membership
+    for node, memberships in membership_values.items():
+        # Filter memberships by threshold
+        filtered_memberships = {k: v for k, v in memberships.items() if v >= threshold}
+        
+        if filtered_memberships:
+            # Normalize memberships to sum to 1
+            total = sum(filtered_memberships.values())
+            sizes = [v/total for v in filtered_memberships.values()]
+            colors = [community_colors[k] for k in filtered_memberships.keys()]
+            
+            # Draw pie chart at node position
+            x, y = pos[node]
+            node_size = sum([G[node][neighbor]['weight'] for neighbor in G[node]]) * config.NODE_SIZE_MULTIPLIER
+            radius = np.sqrt(node_size) / 50
+            
+            # Create pie chart
+            wedges, _ = plt.pie(
+                sizes, colors=colors, center=(x, y), radius=radius, 
+                wedgeprops=dict(edgecolor='w', linewidth=0.5)
+            )
+    
+    # Add labels
+    nx.draw_networkx_labels(
+        G, pos, 
+        font_size=8, 
+        font_family='sans-serif'
+    )
+    
+    # Create legend
+    legend_elements = [
+        mpatches.Patch(color=community_colors[i], label=f'Community {i}')
+        for i in range(num_communities)
+    ]
+    plt.legend(handles=legend_elements, loc='best')
+    
+    plt.title("Fuzzy Community Memberships")
+    plt.axis('off')
+    
+    # Save the figure if an output path is provided
+    if output_file:
+        plt.savefig(output_file, dpi=dpi)
+        plt.close()
+        return None
+    
+    # Return the figure if not saving
+    return plt.gcf()

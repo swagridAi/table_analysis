@@ -54,6 +54,20 @@ def detect_communities(G, algorithm='louvain', resolution=1.0):
                 community_map[node] = i
         return community_map
     
+    elif algorithm == 'fuzzy_cmeans':
+        # Extract FCM-specific parameters from kwargs
+        num_clusters = kwargs.get('num_clusters', 10)
+        fuzziness = kwargs.get('fuzziness', 2.0)
+        error = kwargs.get('error', 0.005)
+        max_iter = kwargs.get('max_iter', 100)
+        
+        # Run FCM and return primary communities only (for compatibility)
+        primary_communities, _ = detect_communities_fuzzy_cmeans(
+            G, num_clusters=num_clusters, fuzziness=fuzziness,
+            error=error, max_iter=max_iter
+        )
+        return primary_communities
+
     else:
         raise ValueError(f"Unknown algorithm: {algorithm}. Choose from 'louvain', 'label_propagation', 'greedy_modularity'")
 
@@ -213,3 +227,98 @@ def analyze_hierarchical_communities(G, hierarchical_communities):
         results[level] = level_results
     
     return results
+
+
+def detect_communities_fuzzy_cmeans(G, num_clusters=10, fuzziness=2.0, error=0.005, max_iter=100):
+    """
+    Detect communities using Fuzzy C-Means clustering.
+    
+    Args:
+        G (networkx.Graph): Network graph to analyze
+        num_clusters (int): Number of clusters/communities to find
+        fuzziness (float): Fuzziness parameter, controls the degree of fuzziness (>1)
+        error (float): Stopping criterion, algorithm stops if memberships change less than this
+        max_iter (int): Maximum number of iterations
+        
+    Returns:
+        tuple: (primary_communities, membership_values)
+            - primary_communities: dict mapping nodes to their primary community IDs
+            - membership_values: dict mapping nodes to their membership values for all communities
+    """
+    import numpy as np
+    from sklearn.preprocessing import normalize
+    
+    # Extract the adjacency matrix
+    adj_matrix = nx.to_numpy_array(G)
+    
+    # Normalize adjacency matrix rows to sum to 1
+    adj_matrix = normalize(adj_matrix, norm='l1', axis=1)
+    
+    # List of nodes in the order they appear in the adjacency matrix
+    nodes = list(G.nodes())
+    
+    # Number of nodes
+    n = len(nodes)
+    
+    # Initialize membership matrix randomly
+    U = np.random.rand(n, num_clusters)
+    # Normalize rows to sum to 1
+    U = normalize(U, norm='l1', axis=1)
+    
+    # Initialize centroids
+    C = np.zeros((num_clusters, n))
+    
+    # Main FCM loop
+    for _ in range(max_iter):
+        # Store old membership values to check for convergence
+        U_old = U.copy()
+        
+        # Update centroids
+        for i in range(num_clusters):
+            # Weighted sum of node vectors
+            numerator = np.sum(np.power(U[:, i], fuzziness)[:, np.newaxis] * adj_matrix, axis=0)
+            denominator = np.sum(np.power(U[:, i], fuzziness))
+            
+            if denominator > 0:
+                C[i] = numerator / denominator
+            else:
+                C[i] = np.zeros(n)
+        
+        # Update memberships
+        for i in range(n):
+            for j in range(num_clusters):
+                distances = np.zeros(num_clusters)
+                for k in range(num_clusters):
+                    # Use 1 - cosine similarity as distance
+                    dot_product = np.dot(adj_matrix[i], C[k])
+                    norm_i = np.linalg.norm(adj_matrix[i])
+                    norm_k = np.linalg.norm(C[k])
+                    
+                    if norm_i > 0 and norm_k > 0:
+                        distances[k] = 1 - (dot_product / (norm_i * norm_k))
+                    else:
+                        distances[k] = 1  # Maximum distance if one vector is zero
+                
+                # Update membership using fuzzy formula
+                if np.any(distances == 0):
+                    # If exact match to a centroid, set membership to 1 for that centroid
+                    U[i, :] = 0
+                    U[i, np.argmin(distances)] = 1
+                else:
+                    # Regular fuzzy update formula
+                    denominator = np.sum([np.power(distances[j]/distances[k], 2/(fuzziness-1)) 
+                                          for k in range(num_clusters)])
+                    U[i, j] = 1 / denominator
+        
+        # Check for convergence
+        if np.linalg.norm(U - U_old) < error:
+            break
+    
+    # Convert to the expected output format
+    # 1. Main communities (hard assignment to highest membership)
+    primary_communities = {nodes[i]: np.argmax(U[i]) for i in range(n)}
+    
+    # 2. Full membership values
+    membership_values = {nodes[i]: {j: U[i, j] for j in range(num_clusters)} for i in range(n)}
+    
+    return primary_communities, membership_values

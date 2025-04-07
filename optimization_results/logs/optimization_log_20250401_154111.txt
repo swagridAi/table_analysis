@@ -1,0 +1,274 @@
+[2025-04-01 15:41:11] Starting new parameter optimization.
+[2025-04-01 15:41:11] Created grid with 216 parameter combinations.
+[2025-04-01 15:41:11] Memory usage Before data loading: 149.38 MB
+[2025-04-01 15:41:11] Loading and processing data in chunks...
+[2025-04-01 15:41:11] Encoding utf-8 failed, trying next...
+[2025-04-01 15:41:11] Found compatible encoding: latin-1
+[2025-04-01 15:41:11] Processing chunk 1...
+[2025-04-01 15:41:12] Memory usage After processing chunk 1: 150.04 MB
+[2025-04-01 15:41:12] Found 25 unique reports.
+[2025-04-01 15:41:12] Creating sparse co-occurrence matrix...
+[2025-04-01 15:41:12] Memory usage After creating co-occurrence matrix: 150.18 MB
+[2025-04-01 15:41:12] Creating network graph...
+[2025-04-01 15:41:12] Loading sample of 25 reports for metrics calculation...
+[2025-04-01 15:41:12] Memory usage After graph creation: 150.47 MB
+[2025-04-01 15:41:12] Search initialization complete.
+[2025-04-01 15:41:12] Graph contains 77 nodes and 393 edges.
+[2025-04-01 15:41:12] Memory usage Final: 150.47 MB
+[2025-04-01 15:41:12] Running parameter optimization with 216 total combinations.
+[2025-04-01 15:41:12] 0 already evaluated, 216 remaining.
+[2025-04-01 15:41:12] Testing combination 1/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:12] New optimal parameters found: label_propagation, resolution=0.5
+[2025-04-01 15:41:12] Testing combination 2/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:12] Testing combination 3/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:12] New optimal parameters found: label_propagation, resolution=0.5
+[2025-04-01 15:41:12] Testing combination 4/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:12] Testing combination 5/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:12] Testing combination 6/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:12] Testing combination 7/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:12] Testing combination 8/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:12] Testing combination 9/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:12] Testing combination 10/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:12] Testing combination 11/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:12] Testing combination 12/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:12] Testing combination 13/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:12] Testing combination 14/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:12] Testing combination 15/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:12] Testing combination 16/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:12] Testing combination 17/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:12] Testing combination 18/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:13] Testing combination 19/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:13] Testing combination 20/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:13] Testing combination 21/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:13] New optimal parameters found: label_propagation, resolution=0.5
+[2025-04-01 15:41:13] Testing combination 22/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:13] Testing combination 23/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:13] New optimal parameters found: label_propagation, resolution=0.5
+[2025-04-01 15:41:13] Testing combination 24/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:13] Testing combination 25/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:13] Testing combination 26/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:13] Testing combination 27/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:13] Testing combination 28/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:13] Testing combination 29/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:13] Testing combination 30/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:13] Testing combination 31/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:13] Testing combination 32/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:13] Testing combination 33/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:13] Testing combination 34/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:13] Testing combination 35/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:13] Testing combination 36/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:13] Testing combination 37/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:13] Testing combination 38/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:13] New optimal parameters found: label_propagation, resolution=0.5
+[2025-04-01 15:41:13] Testing combination 39/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:13] Testing combination 40/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:13] Testing combination 41/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:13] Testing combination 42/216: {'community_algorithm': 'label_propagation', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:13] Testing combination 43/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:13] Testing combination 44/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:14] Testing combination 45/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:14] Testing combination 46/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:14] Testing combination 47/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:14] Testing combination 48/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:14] Testing combination 49/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:14] Testing combination 50/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:14] Testing combination 51/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:14] Testing combination 52/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:14] Testing combination 53/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:14] Testing combination 54/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:14] Testing combination 55/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:14] Testing combination 56/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:14] Testing combination 57/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:14] Testing combination 58/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:14] Testing combination 59/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:14] Testing combination 60/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:14] Testing combination 61/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:14] Testing combination 62/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:14] Testing combination 63/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:14] Testing combination 64/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:14] Testing combination 65/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:14] Testing combination 66/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:14] Testing combination 67/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:14] Testing combination 68/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:14] Testing combination 69/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:14] Testing combination 70/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:14] Testing combination 71/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:15] Testing combination 72/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:15] Testing combination 73/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:15] Testing combination 74/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:15] Testing combination 75/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:15] Testing combination 76/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:15] Testing combination 77/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:15] Testing combination 78/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:15] Testing combination 79/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:15] Testing combination 80/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:15] Testing combination 81/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:15] Testing combination 82/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:15] Testing combination 83/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:15] Testing combination 84/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:15] Testing combination 85/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:15] Testing combination 86/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:15] Testing combination 87/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:15] Testing combination 88/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:15] Testing combination 89/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:15] Testing combination 90/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:15] Testing combination 91/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:15] Testing combination 92/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:15] Testing combination 93/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:15] Testing combination 94/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:15] Testing combination 95/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:15] Testing combination 96/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:16] Testing combination 97/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:16] Testing combination 98/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:16] Testing combination 99/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:16] Testing combination 100/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:16] Testing combination 101/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:16] Testing combination 102/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:16] Testing combination 103/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:16] Testing combination 104/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:16] Testing combination 105/216: {'community_algorithm': 'louvain', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:16] Testing combination 106/216: {'community_algorithm': 'label_propagation', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:16] Testing combination 107/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:16] Testing combination 108/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:16] Testing combination 109/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:16] Testing combination 110/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:16] Testing combination 111/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:16] Testing combination 112/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:16] Testing combination 113/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:16] Testing combination 114/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:16] Testing combination 115/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:16] Testing combination 116/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:16] Testing combination 117/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:16] Testing combination 118/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:16] Testing combination 119/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:16] Testing combination 120/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:16] Testing combination 121/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:16] Testing combination 122/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:17] Testing combination 123/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:17] Testing combination 124/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:17] Testing combination 125/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:17] Testing combination 126/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:17] Testing combination 127/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:17] Testing combination 128/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:17] Testing combination 129/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:17] Testing combination 130/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:17] Testing combination 131/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:17] Testing combination 132/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:17] Testing combination 133/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:17] Testing combination 134/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:17] Testing combination 135/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:17] Testing combination 136/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:17] Testing combination 137/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:17] Testing combination 138/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:17] Testing combination 139/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:17] Testing combination 140/216: {'community_algorithm': 'louvain', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:17] Testing combination 141/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:17] Testing combination 142/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:17] Testing combination 143/216: {'community_algorithm': 'label_propagation', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:17] Testing combination 144/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:17] Testing combination 145/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:17] Testing combination 146/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:18] Testing combination 147/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:18] Testing combination 148/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:18] Testing combination 149/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:18] Testing combination 150/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:18] Testing combination 151/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:18] Testing combination 152/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:18] Testing combination 153/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:18] Testing combination 154/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:18] Testing combination 155/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:18] Testing combination 156/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:18] Testing combination 157/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:18] Testing combination 158/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:18] Testing combination 159/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:18] Testing combination 160/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:18] Testing combination 161/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:18] Testing combination 162/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:18] Testing combination 163/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:18] Testing combination 164/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:18] Testing combination 165/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:18] Testing combination 166/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:18] Testing combination 167/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:18] Testing combination 168/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 0.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:18] Testing combination 169/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:18] Testing combination 170/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:18] Testing combination 171/216: {'community_algorithm': 'louvain', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:19] Testing combination 172/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:19] Testing combination 173/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:19] Testing combination 174/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:19] Testing combination 175/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:19] Testing combination 176/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:19] Testing combination 177/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:19] Testing combination 178/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:19] Testing combination 179/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:19] Testing combination 180/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:19] Testing combination 181/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:19] Testing combination 182/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:19] Testing combination 183/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:19] Testing combination 184/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:19] Testing combination 185/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:19] Testing combination 186/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:19] Testing combination 187/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:19] Testing combination 188/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:19] Testing combination 189/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:19] Testing combination 190/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:19] Testing combination 191/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:19] Testing combination 192/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:19] Testing combination 193/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:19] Testing combination 194/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:19] Testing combination 195/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:20] Testing combination 196/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 4.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:20] Testing combination 197/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:20] Testing combination 198/216: {'community_algorithm': 'louvain', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:20] Testing combination 199/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:20] Testing combination 200/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:20] Testing combination 201/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:20] Testing combination 202/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:20] Testing combination 203/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:20] Testing combination 204/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:20] Testing combination 205/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:20] Testing combination 206/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:20] Testing combination 207/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 1.5, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:20] Testing combination 208/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:20] Testing combination 209/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:20] Testing combination 210/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.8}
+[2025-04-01 15:41:20] Testing combination 211/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:20] Testing combination 212/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:20] Testing combination 213/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.5, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:20] Testing combination 214/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:20] Testing combination 215/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.8, 'quality_weight_redundancy': 0.3}
+[2025-04-01 15:41:20] Testing combination 216/216: {'community_algorithm': 'greedy_modularity', 'community_resolution': 2.0, 'min_pattern_frequency': 2.0, 'quality_weight_coverage': 0.3, 'quality_weight_redundancy': 0.5}
+[2025-04-01 15:41:20] Parameter optimization complete!
+[2025-04-01 15:41:20] Results saved to optimization_results\results\optimization_results.csv
+[2025-04-01 15:41:21] Optimal parameters saved to optimization_results\results\optimal_parameters.csv and optimization_results\results\optimal_parameters.json
+[2025-04-01 15:41:21] 
+Values for parameter community_resolution:
+[2025-04-01 15:41:21]   Value 0: '0.5' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 1: '0.5' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 2: '0.5' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 3: '0.5' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 4: '0.5' of type <class 'float'>
+[2025-04-01 15:41:21] 
+Values for parameter min_pattern_frequency:
+[2025-04-01 15:41:21]   Value 0: '4.0' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 1: '4.0' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 2: '4.0' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 3: '4.0' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 4: '4.0' of type <class 'float'>
+[2025-04-01 15:41:21] 
+Values for parameter quality_weight_coverage:
+[2025-04-01 15:41:21]   Value 0: '0.3' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 1: '0.5' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 2: '0.3' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 3: '0.5' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 4: '0.8' of type <class 'float'>
+[2025-04-01 15:41:21] 
+Values for parameter quality_weight_redundancy:
+[2025-04-01 15:41:21]   Value 0: '0.5' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 1: '0.8' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 2: '0.3' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 3: '0.5' of type <class 'float'>
+[2025-04-01 15:41:21]   Value 4: '0.8' of type <class 'float'>
+[2025-04-01 15:41:30] Parameter influence visualizations saved to optimization_results\visualizations
+[2025-04-01 15:41:30] Visualizations created successfully.
+[2025-04-01 15:41:30] Checkpoint file removed (search completed successfully).

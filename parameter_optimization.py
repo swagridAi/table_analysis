@@ -166,6 +166,17 @@ class ResumableGridSearch:
         
         # Shuffle to ensure diverse sampling in case of interruption
         np.random.shuffle(grid)
+
+        # Assign execution time estimates to each combination
+        for combo in grid:
+            combo['_estimated_runtime'] = self._estimate_runtime(combo)
+        
+        # Sort by estimated runtime (fastest first)
+        grid.sort(key=lambda x: x['_estimated_runtime'])
+        
+        # Remove the runtime estimate before returning
+        for combo in grid:
+            del combo['_estimated_runtime']
         
         # Limit combinations if requested
         if self.max_combinations and len(grid) > self.max_combinations:
@@ -697,6 +708,32 @@ class ResumableGridSearch:
             self._log_progress("Visualizations created successfully.")
         except Exception as e:
             self._log_progress(f"Error creating visualizations: {str(e)}")
+
+    def _estimate_runtime(self, params):
+        """
+        Estimate relative runtime for a parameter combination.
+        Returns a numeric score where lower means faster.
+        """
+        score = 0
+        
+        # Algorithm factor (label_propagation fastest, greedy_modularity slowest)
+        algorithm = params.get('community_algorithm', 'louvain')
+        if algorithm == 'label_propagation':
+            score += 1
+        elif algorithm == 'louvain':
+            score += 3
+        elif algorithm == 'greedy_modularity':
+            score += 5
+        
+        # Resolution factor (higher resolution = more communities = slower)
+        resolution = float(params.get('community_resolution', 1.0))
+        score += resolution * 2
+        
+        # Pattern frequency factor (higher min_frequency = fewer patterns = faster)
+        min_frequency = float(params.get('min_pattern_frequency', 2))
+        score += (6 - min_frequency)  # Invert so higher minimum = lower score
+        
+        return score
     
 
 def ensure_parameter_types(param_ranges):
@@ -770,10 +807,10 @@ def main():
     # Define parameter ranges to explore
     param_ranges = {
         'community_algorithm': ['louvain', 'label_propagation', 'greedy_modularity'],
-        'community_resolution': [0.5, 0.8, 1.0, 1.2, 1.5, 2.0],
-        'min_pattern_frequency': [2, 3, 4],
-        'quality_weight_coverage': [0.3, 0.4, 0.5, 0.6],
-        'quality_weight_redundancy': [0.3, 0.4, 0.5, 0.6]
+        'community_resolution': [0.5,  1.0, 1.5, 2.0],
+        'min_pattern_frequency': [2, 4],
+        'quality_weight_coverage': [0.3, 0.5, 0.8],
+        'quality_weight_redundancy': [0.3, 0.5, 0.8]
     }
     param_ranges = ensure_parameter_types(param_ranges)
     # Define input file
@@ -793,7 +830,7 @@ def main():
         input_file=input_file,
         output_base_dir=output_dir,
         param_ranges=param_ranges,
-        max_combinations=args.max_combinations or 50,  # Default limit
+        max_combinations=args.max_combinations or 500,  # Default limit
         validate=not args.no_validate,
         force=args.force
     )
