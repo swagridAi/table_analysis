@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Data Co-occurrence Analysis with adaptive fuzzy clustering to handle large communities.
+Data Co-occurrence Analysis with report-community alignment analysis.
 """
 
 import os
@@ -14,7 +14,7 @@ from src.visualization.network import create_network_graph, visualize_fuzzy_comm
 import networkx as nx
 import config
 import time
-from collections import Counter
+from collections import Counter, defaultdict
 
 def ensure_directories_exist():
     """Create output directories if they don't exist."""
@@ -22,7 +22,8 @@ def ensure_directories_exist():
         config.PROCESSED_DATA_DIR,
         config.VISUALIZATIONS_DIR,
         config.EXPORTS_DIR,
-        config.COMMUNITY_VIZ_DIR
+        config.COMMUNITY_VIZ_DIR,
+        os.path.join(config.OUTPUT_DIR, "report_analysis")  # New directory for report analysis
     ]
     for directory in directories:
         os.makedirs(directory, exist_ok=True)
@@ -35,7 +36,7 @@ def save_output(data, filename, directory=None, index=False, message=None):
         if isinstance(data, pd.DataFrame):
             data.to_csv(filepath, index=index)
         elif isinstance(data, dict):
-            pd.DataFrame.from_dict(data).to_csv(filepath, index=index)
+            pd.DataFrame.from_dict(data, orient='index').to_csv(filepath, index=True)
         else:
             raise TypeError(f"Unsupported data type: {type(data)}")
         
@@ -46,159 +47,265 @@ def save_output(data, filename, directory=None, index=False, message=None):
         print(f"Error saving {filename}: {e}")
         return False
 
-def analyze_community_sizes(primary_communities):
-    """Analyze community sizes to identify imbalance issues."""
+def analyze_community_balance(primary_communities):
+    """Analyze if communities are sufficiently balanced."""
     community_sizes = Counter(primary_communities.values())
     total_elements = len(primary_communities)
     
     sizes = pd.Series(community_sizes)
     
-    print("\nCommunity Size Analysis:")
-    print(f"Total communities: {len(community_sizes)}")
-    print(f"Largest community: {sizes.max()} elements ({sizes.max()/total_elements:.1%} of total)")
-    print(f"Smallest community: {sizes.min()} elements")
-    print(f"Average community size: {sizes.mean():.1f} elements")
+    # Calculate balance metrics
+    size_cv = sizes.std() / sizes.mean()  # Coefficient of variation
+    max_size_percent = sizes.max() / total_elements
+    min_size_percent = sizes.min() / total_elements
     
-    # Check for imbalance
-    size_std = sizes.std()
-    size_cv = size_std / sizes.mean()  # Coefficient of variation
+    # Check if balance is acceptable
+    is_balanced = True
+    reasons = []
     
-    imbalance = False
-    if size_cv > 0.7:  # Arbitrary threshold for high variation
-        imbalance = True
-        print("\n⚠️ WARNING: High community size variation detected")
-        print(f"Community sizes have high variation (CV={size_cv:.2f})")
+    if size_cv > 0.8:
+        is_balanced = False
+        reasons.append(f"High size variation (CV={size_cv:.2f})")
     
-    if sizes.max() > total_elements * 0.4:  # If largest community has >40% of elements
-        imbalance = True
-        print("\n⚠️ WARNING: Dominant community detected")
-        print(f"Largest community contains {sizes.max()/total_elements:.1%} of all elements")
+    if max_size_percent > 0.4:
+        is_balanced = False
+        reasons.append(f"Dominant community ({max_size_percent:.1%} of elements)")
     
-    return {
-        "sizes": dict(community_sizes),
-        "imbalance_detected": imbalance,
+    if min_size_percent < 0.05 and len(community_sizes) > 3:
+        is_balanced = False
+        reasons.append(f"Very small communities ({min_size_percent:.1%} of elements)")
+    
+    result = {
+        "is_balanced": is_balanced,
         "size_variation": size_cv,
-        "max_percent": sizes.max()/total_elements
+        "max_community_percent": max_size_percent,
+        "min_community_percent": min_size_percent,
+        "num_communities": len(community_sizes),
+        "reasons": reasons
     }
+    
+    # Print analysis
+    status = "✓ ACCEPTABLE" if is_balanced else "❌ NEEDS IMPROVEMENT"
+    print(f"\nCommunity Balance Analysis: {status}")
+    print(f"Communities: {len(community_sizes)}")
+    print(f"Size variation (CV): {size_cv:.2f}")
+    print(f"Largest community: {sizes.max()} elements ({max_size_percent:.1%})")
+    print(f"Smallest community: {sizes.min()} elements ({min_size_percent:.1%})")
+    
+    if reasons:
+        print("Issues found:")
+        for reason in reasons:
+            print(f"  • {reason}")
+    
+    return result
 
-def adaptive_fuzzy_clustering(G, max_imbalance=0.35, min_clusters=3, max_clusters=15, 
-                             fuzziness_range=(1.5, 2.5), num_attempts=5):
+def map_reports_to_communities(df_exploded, primary_communities):
     """
-    Perform adaptive fuzzy clustering to avoid large dominant communities.
+    Map reports to the communities they use elements from.
     
     Args:
-        G: NetworkX graph
-        max_imbalance: Maximum acceptable size of largest community (as fraction of total)
-        min_clusters: Minimum number of clusters to try
-        max_clusters: Maximum number of clusters to try
-        fuzziness_range: Range of fuzziness values to try
-        num_attempts: Number of parameter combinations to try
+        df_exploded: DataFrame with report-element relationships
+        primary_communities: Dictionary mapping elements to community IDs
         
     Returns:
-        tuple: (best_primary_communities, best_membership_values, parameters)
+        Dictionary with report analysis
     """
-    print("\nPerforming adaptive fuzzy clustering to balance community sizes...")
+    # Create a mapping of reports to their elements
+    report_elements = df_exploded.groupby('Report')['data_element'].apply(list).to_dict()
     
-    best_result = None
-    best_params = None
-    best_imbalance = 1.0  # Start with worst possible value
+    # Analyze each report's community alignment
+    report_analysis = {}
     
-    total_elements = G.number_of_nodes()
-    
-    # Try different parameter combinations
-    attempts = 0
-    for num_clusters in range(min_clusters, max_clusters + 1):
-        # Try more fuzziness values for cluster counts that look promising
-        fuzziness_steps = max(2, int(num_attempts / (max_clusters - min_clusters + 1)))
+    for report, elements in report_elements.items():
+        # Map elements to communities
+        element_communities = [primary_communities.get(elem) for elem in elements if elem in primary_communities]
         
-        for fuzz_idx in range(fuzziness_steps):
-            fuzziness = fuzziness_range[0] + (fuzziness_range[1] - fuzziness_range[0]) * (fuzz_idx / (fuzziness_steps - 1))
-            
-            attempts += 1
-            print(f"  Attempt {attempts}/{num_attempts}: clusters={num_clusters}, fuzziness={fuzziness:.2f}...")
-            
-            # Run fuzzy clustering with these parameters
-            primary_communities, membership_values = detect_communities_fuzzy_cmeans(
-                G, num_clusters=num_clusters, fuzziness=fuzziness
-            )
-            
-            # Evaluate balance
-            community_sizes = Counter(primary_communities.values())
-            largest_community_size = max(community_sizes.values())
-            imbalance_metric = largest_community_size / total_elements
-            
-            print(f"    Result: largest community={largest_community_size} elements ({imbalance_metric:.1%} of total)")
-            
-            # Check if this is better than current best
-            if imbalance_metric < best_imbalance:
-                best_imbalance = imbalance_metric
-                best_result = (primary_communities, membership_values)
-                best_params = {"num_clusters": num_clusters, "fuzziness": fuzziness}
-                
-                # If we found a good enough result, we can stop
-                if imbalance_metric <= max_imbalance:
-                    print(f"\n✓ Found acceptable balance with {num_clusters} clusters and fuzziness={fuzziness:.2f}")
-                    print(f"  Largest community contains {imbalance_metric:.1%} of elements")
-                    return best_result[0], best_result[1], best_params
-            
-            # Stop if we've reached the maximum number of attempts
-            if attempts >= num_attempts:
-                break
+        # Count community occurrences
+        community_counts = Counter(element_communities)
+        total_elements = len(element_communities)
         
-        # Break outer loop too if max attempts reached
-        if attempts >= num_attempts:
-            break
-    
-    print(f"\n⚠️ Could not achieve ideal balance ({max_imbalance:.0%}) after {attempts} attempts")
-    print(f"Best result: {best_params['num_clusters']} clusters, fuzziness={best_params['fuzziness']:.2f}")
-    print(f"Largest community contains {best_imbalance:.1%} of elements")
-    
-    return best_result[0], best_result[1], best_params
-
-def create_element_clusters_df(membership_df, threshold=0.3):
-    """
-    Create a more useful representation of element clusters with thresholded memberships.
-    
-    This function makes it easier to see which elements belong to which communities
-    by creating a clean CSV with elements as rows and significant communities as columns.
-    """
-    # Create a new DataFrame for the output
-    elements = membership_df.index.tolist()
-    result_data = []
-    
-    for element in elements:
-        # Get memberships for this element
-        memberships = membership_df.loc[element]
+        if total_elements == 0:
+            continue
         
-        # Find significant communities (membership > threshold)
-        significant = {col: val for col, val in memberships.items() if val >= threshold}
+        # Get primary community (most elements)
+        primary_community = community_counts.most_common(1)[0][0] if community_counts else None
+        primary_community_percent = community_counts.most_common(1)[0][1] / total_elements if community_counts else 0
         
-        # Sort by membership value (descending)
-        sorted_memberships = sorted(significant.items(), key=lambda x: x[1], reverse=True)
+        # Calculate report fragmentation (entropy)
+        community_proportions = [count/total_elements for count in community_counts.values()]
+        entropy = -sum(p * np.log2(p) for p in community_proportions if p > 0)
         
-        # Create a row with primary and secondary communities
-        row = {
-            'element': element, 
-            'table': element.split('.')[1] if '.' in element else '',
-            'primary_community': memberships.idxmax(),
-            'primary_membership': memberships.max()
+        report_analysis[report] = {
+            'element_count': total_elements,
+            'community_count': len(community_counts),
+            'primary_community': primary_community,
+            'primary_community_percent': primary_community_percent,
+            'entropy': entropy,
+            'community_distribution': dict(community_counts),
+            'is_fragmented': len(community_counts) > 1 and primary_community_percent < 0.8
         }
-        
-        # Add significant secondary memberships
-        for i, (comm, val) in enumerate(sorted_memberships[1:3], 1):  # Get up to 2 secondary memberships
-            if val >= threshold:
-                row[f'secondary_community_{i}'] = comm
-                row[f'secondary_membership_{i}'] = val
-        
-        result_data.append(row)
     
-    result_df = pd.DataFrame(result_data)
-    return result_df
+    return report_analysis
+
+def generate_community_report_assignments(report_analysis, min_elements=3):
+    """
+    Generate recommended report assignments based on communities.
+    
+    Args:
+        report_analysis: Dictionary with report community analysis
+        min_elements: Minimum elements to include in a report
+        
+    Returns:
+        DataFrame with recommended report assignments
+    """
+    # Group elements by community
+    community_elements = defaultdict(list)
+    
+    # Extract the primary community for each element from the report analysis
+    for report, data in report_analysis.items():
+        if data['element_count'] < min_elements:
+            continue
+            
+        primary_community = data['primary_community']
+        if primary_community is not None:
+            community_elements[primary_community].append(report)
+    
+    # Create recommendations for each community
+    recommendations = []
+    
+    for community_id, reports in community_elements.items():
+        # Sort reports by how well they align with the community
+        reports_sorted = sorted(
+            [(report, report_analysis[report]['primary_community_percent']) 
+             for report in reports],
+            key=lambda x: x[1],
+            reverse=True
+        )
+        
+        # Group strongly aligned reports
+        core_reports = [r[0] for r in reports_sorted if r[1] >= 0.8]
+        mixed_reports = [r[0] for r in reports_sorted if r[1] < 0.8]
+        
+        recommendations.append({
+            'community_id': community_id,
+            'report_count': len(reports),
+            'core_report_count': len(core_reports),
+            'mixed_report_count': len(mixed_reports),
+            'core_reports': ', '.join(core_reports[:5]) + ('...' if len(core_reports) > 5 else ''),
+            'mixed_reports': ', '.join(mixed_reports[:5]) + ('...' if len(mixed_reports) > 5 else ''),
+            'consolidation_potential': len(core_reports) > 1,
+            'fragmentation_issues': len(mixed_reports) > 0
+        })
+    
+    return pd.DataFrame(recommendations)
+
+def identify_report_consolidation_opportunities(report_analysis):
+    """
+    Identify opportunities to consolidate reports based on community alignment.
+    
+    Args:
+        report_analysis: Dictionary with report community analysis
+        
+    Returns:
+        List of consolidation opportunities
+    """
+    # Group reports by primary community
+    community_reports = defaultdict(list)
+    
+    for report, data in report_analysis.items():
+        if data['primary_community'] is not None and data['primary_community_percent'] >= 0.7:
+            community_reports[data['primary_community']].append((report, data))
+    
+    # Find consolidation opportunities (communities with multiple reports)
+    opportunities = []
+    
+    for community_id, reports in community_reports.items():
+        if len(reports) <= 1:
+            continue
+            
+        # For larger groups, suggest consolidation
+        if len(reports) >= 3:
+            report_names = [r[0] for r in reports]
+            total_elements = sum(r[1]['element_count'] for r in reports)
+            
+            opportunities.append({
+                'community_id': community_id,
+                'report_count': len(reports),
+                'reports': report_names,
+                'total_elements': total_elements,
+                'opportunity_type': 'consolidation',
+                'description': f"Consider consolidating {len(reports)} reports from Community {community_id}"
+            })
+    
+    return opportunities
+
+def identify_report_splitting_opportunities(report_analysis):
+    """
+    Identify opportunities to split reports based on community fragmentation.
+    
+    Args:
+        report_analysis: Dictionary with report community analysis
+        
+    Returns:
+        List of splitting opportunities
+    """
+    opportunities = []
+    
+    for report, data in report_analysis.items():
+        # Check if the report is significantly fragmented
+        if data['community_count'] >= 3 and data['primary_community_percent'] < 0.6:
+            # This report draws from multiple communities with no strong alignment
+            communities = data['community_distribution']
+            top_communities = sorted(communities.items(), key=lambda x: x[1], reverse=True)[:3]
+            
+            description = f"Consider splitting into {len(top_communities)} reports by community:"
+            for comm_id, count in top_communities:
+                description += f"\n- Community {comm_id}: {count} elements ({count/data['element_count']:.0%})"
+            
+            opportunities.append({
+                'report': report,
+                'element_count': data['element_count'],
+                'community_count': data['community_count'],
+                'entropy': data['entropy'],
+                'opportunity_type': 'splitting',
+                'description': description
+            })
+    
+    return opportunities
+
+def create_report_community_matrix(df_exploded, primary_communities):
+    """
+    Create a matrix showing which reports use elements from which communities.
+    
+    Args:
+        df_exploded: DataFrame with report-element relationships
+        primary_communities: Dictionary mapping elements to community IDs
+    
+    Returns:
+        DataFrame with reports as rows and communities as columns
+    """
+    # Map each element to its community
+    element_to_community = primary_communities
+    
+    # Create a new column with the community ID
+    df_with_community = df_exploded.copy()
+    df_with_community['community_id'] = df_with_community['data_element'].map(element_to_community)
+    
+    # Filter out rows where we couldn't assign a community
+    df_with_community = df_with_community.dropna(subset=['community_id'])
+    
+    # Count elements per report and community
+    report_community_counts = df_with_community.groupby(['Report', 'community_id']).size().unstack(fill_value=0)
+    
+    # Calculate the percentage of elements from each community
+    report_community_pct = report_community_counts.div(report_community_counts.sum(axis=1), axis=0)
+    
+    return report_community_counts, report_community_pct
 
 def main():
-    """Main function to orchestrate the analysis workflow with adaptive clustering."""
+    """Main function to orchestrate the analysis workflow with report alignment."""
     start_time = time.time()
-    print("Starting data co-occurrence analysis with adaptive fuzzy clustering...")
+    print("Starting data co-occurrence analysis with report-community alignment...")
     
     # Ensure all required directories exist
     ensure_directories_exist()
@@ -217,90 +324,114 @@ def main():
         # Calculate co-occurrence
         print("Building co-occurrence relationships...")
         co_occurrence = calculate_cooccurrence(df_exploded)
-        print(f"Found {len(co_occurrence)} co-occurrence relationships")
         
         # Create co-occurrence matrix
         cooccurrence_matrix, all_elements = create_cooccurrence_matrix(co_occurrence)
-        save_output(cooccurrence_matrix, "cooccurrence_matrix.csv", index=True,
-                   message=f"Created {cooccurrence_matrix.shape[0]}x{cooccurrence_matrix.shape[1]} co-occurrence matrix")
-        
-        # Create heatmap visualization
-        heatmap_file_path = os.path.join(config.VISUALIZATIONS_DIR, "cooccurrence_heatmap.png")
-        create_heatmap(cooccurrence_matrix, output_file=heatmap_file_path)
-        print(f"Created heatmap visualization at {heatmap_file_path}")
+        save_output(cooccurrence_matrix, "cooccurrence_matrix.csv", index=True)
         
         # Create network graph 
         print("Building network graph...")
         G = create_network_graph(co_occurrence, all_elements)
         print(f"Created network with {G.number_of_nodes()} nodes and {G.number_of_edges()} edges")
         
-        # Run adaptive fuzzy clustering to find balanced communities
-        primary_communities, membership_values, params = adaptive_fuzzy_clustering(
-            G, 
-            max_imbalance=0.35,  # No community should have more than 35% of elements
-            min_clusters=3,
-            max_clusters=12,
-            num_attempts=8
+        # Run fuzzy clustering with default parameters
+        num_clusters = getattr(config, 'FUZZY_CLUSTERS', 8)
+        fuzziness = getattr(config, 'FUZZY_FUZZINESS', 2.0)
+        print(f"Running fuzzy c-means clustering with {num_clusters} clusters and fuzziness={fuzziness}...")
+        
+        primary_communities, membership_values = detect_communities_fuzzy_cmeans(
+            G, num_clusters=num_clusters, fuzziness=fuzziness
         )
         
-        # Save the parameters used
-        params_df = pd.DataFrame([params])
-        save_output(params_df, "fuzzy_clustering_parameters.csv",
-                   message="Saved clustering parameters")
+        # Analyze if communities are well-balanced
+        balance_analysis = analyze_community_balance(primary_communities)
+        save_output(pd.DataFrame([balance_analysis]), "community_balance_analysis.csv")
         
-        # Analyze community sizes
-        size_analysis = analyze_community_sizes(primary_communities)
-        save_output(pd.DataFrame([size_analysis]), "community_size_analysis.csv",
-                   message="Saved community size analysis")
+        if not balance_analysis["is_balanced"]:
+            print("\nWARNING: Community balance is not ideal. Consider adjusting parameters.")
+            print("Continuing analysis with current communities...")
         
         # Save primary communities
         primary_df = pd.DataFrame({
             'data_element': list(primary_communities.keys()),
             'primary_community_id': list(primary_communities.values())
         })
-        save_output(primary_df, "fuzzy_primary_communities.csv", 
-                   message=f"Saved primary community assignments for {len(primary_df)} elements")
+        save_output(primary_df, "fuzzy_primary_communities.csv")
         
-        # Save full membership matrix
-        membership_df = pd.DataFrame.from_dict(membership_values, orient='index')
-        membership_df.index.name = 'data_element'
-        membership_df.columns = [f'community_{i}' for i in range(membership_df.shape[1])]
-        save_output(membership_df, "fuzzy_membership_values.csv", index=True,
-                   message=f"Saved full membership values matrix ({membership_df.shape[0]}x{membership_df.shape[1]})")
+        # REPORT ALIGNMENT ANALYSIS
+        print("\n=== REPORT-COMMUNITY ALIGNMENT ANALYSIS ===")
         
-        # Create a more useful representation of communities
-        element_clusters_df = create_element_clusters_df(membership_df)
-        save_output(element_clusters_df, "element_community_assignments.csv",
-                   message="Created user-friendly element-community assignment file")
+        # Map reports to communities
+        print("Analyzing how reports align with communities...")
+        report_analysis = map_reports_to_communities(df_exploded, primary_communities)
         
-        # Create and save visualization of fuzzy communities
-        fuzzy_viz_path = os.path.join(config.VISUALIZATIONS_DIR, "fuzzy_communities_network.png")
-        visualize_fuzzy_communities(G, membership_values, output_file=fuzzy_viz_path)
-        print(f"Created fuzzy community visualization at {fuzzy_viz_path}")
+        # Save report analysis
+        report_analysis_df = pd.DataFrame.from_dict(report_analysis, orient='index')
+        save_output(report_analysis_df, "report_community_analysis.csv", 
+                   directory=os.path.join(config.OUTPUT_DIR, "report_analysis"),
+                   index=True,
+                   message=f"Saved community analysis for {len(report_analysis)} reports")
         
-        # Generate community summaries by table
-        print("Analyzing community distribution by table...")
-        table_community = element_clusters_df.groupby('table')['primary_community'].apply(list).to_dict()
+        # Generate community-based report assignments
+        print("Generating recommended report assignments based on communities...")
+        assignments = generate_community_report_assignments(report_analysis)
+        save_output(assignments, "community_report_assignments.csv",
+                   directory=os.path.join(config.OUTPUT_DIR, "report_analysis"),
+                   message=f"Generated report assignments for {len(assignments)} communities")
         
-        table_analysis = []
-        for table, communities in table_community.items():
-            community_counts = Counter(communities)
-            dominant_community = community_counts.most_common(1)[0][0] if community_counts else None
-            dominant_percent = (community_counts.most_common(1)[0][1] / len(communities)) if community_counts else 0
+        # Identify consolidation opportunities
+        print("Identifying report consolidation opportunities...")
+        consolidation = identify_report_consolidation_opportunities(report_analysis)
+        if consolidation:
+            save_output(pd.DataFrame(consolidation), "report_consolidation_opportunities.csv",
+                       directory=os.path.join(config.OUTPUT_DIR, "report_analysis"),
+                       message=f"Identified {len(consolidation)} report consolidation opportunities")
+        
+        # Identify splitting opportunities
+        print("Identifying report splitting opportunities...")
+        splitting = identify_report_splitting_opportunities(report_analysis)
+        if splitting:
+            save_output(pd.DataFrame(splitting), "report_splitting_opportunities.csv",
+                       directory=os.path.join(config.OUTPUT_DIR, "report_analysis"),
+                       message=f"Identified {len(splitting)} report splitting opportunities")
+        
+        # Create report-community matrix
+        print("Creating report-community matrix...")
+        report_community_counts, report_community_pct = create_report_community_matrix(df_exploded, primary_communities)
+        save_output(report_community_counts, "report_community_matrix.csv",
+                   directory=os.path.join(config.OUTPUT_DIR, "report_analysis"),
+                   index=True,
+                   message="Saved report-community element count matrix")
+        save_output(report_community_pct, "report_community_percent_matrix.csv",
+                   directory=os.path.join(config.OUTPUT_DIR, "report_analysis"),
+                   index=True,
+                   message="Saved report-community percentage matrix")
+        
+        # Print summary statistics
+        print("\n=== REPORT ALIGNMENT SUMMARY ===")
+        aligned_reports = sum(1 for data in report_analysis.values() 
+                            if data['community_count'] == 1 or data['primary_community_percent'] >= 0.8)
+        fragmented_reports = sum(1 for data in report_analysis.values() if data['is_fragmented'])
+        
+        print(f"Total reports analyzed: {len(report_analysis)}")
+        print(f"Well-aligned reports: {aligned_reports} ({aligned_reports/len(report_analysis):.1%})")
+        print(f"Fragmented reports: {fragmented_reports} ({fragmented_reports/len(report_analysis):.1%})")
+        
+        if consolidation:
+            print(f"Consolidation opportunities: {len(consolidation)}")
+        if splitting:
+            print(f"Splitting opportunities: {len(splitting)}")
+        
+        print("\nTop report consolidation opportunities:")
+        if consolidation:
+            top_opportunities = sorted(consolidation, key=lambda x: x['report_count'], reverse=True)[:3]
+            for i, opp in enumerate(top_opportunities, 1):
+                print(f"{i}. Community {opp['community_id']}: {opp['report_count']} reports could be consolidated")
+        else:
+            print("None identified")
             
-            table_analysis.append({
-                'table': table,
-                'element_count': len(communities),
-                'unique_communities': len(community_counts),
-                'dominant_community': dominant_community,
-                'dominant_community_percent': dominant_percent
-            })
-        
-        save_output(pd.DataFrame(table_analysis), "table_community_analysis.csv",
-                   message="Saved table-level community analysis")
-        
         elapsed_time = time.time() - start_time
-        print(f"\nAnalysis complete! All fuzzy clustering results saved. ({elapsed_time:.2f} seconds)")
+        print(f"\nAnalysis complete! All results saved. ({elapsed_time:.2f} seconds)")
         
     except Exception as e:
         print(f"Error during analysis: {e}")

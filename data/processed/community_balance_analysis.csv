@@ -1,0 +1,2 @@
+is_balanced,size_variation,max_community_percent,min_community_percent,num_communities,reasons
+False,0.7387120493752302,0.2727272727272727,0.025974025974025976,8,['Very small communities (2.6% of elements)']
