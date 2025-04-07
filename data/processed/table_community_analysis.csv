@@ -1,0 +1,11 @@
+table,element_count,unique_communities,dominant_community,dominant_community_percent
+Table1,5,3,community_2,0.6
+Table10,8,4,community_2,0.375
+Table2,7,4,community_2,0.42857142857142855
+Table3,10,4,community_1,0.3
+Table4,6,4,community_0,0.3333333333333333
+Table5,9,4,community_0,0.4444444444444444
+Table6,6,3,community_2,0.3333333333333333
+Table7,6,3,community_2,0.5
+Table8,11,3,community_2,0.36363636363636365
+Table9,9,3,community_0,0.5555555555555556
