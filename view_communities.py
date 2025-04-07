@@ -165,7 +165,7 @@ class ElementCommunityViewer:
         # Extract table names from elements
         tables = defaultdict(list)
         for element in membership_df.index:
-            if '.' in element:
+            if isinstance(element, str) and '.' in element:
                 parts = element.split('.')
                 table = parts[1] if len(parts) > 1 else parts[0]
                 tables[table].append(element)
@@ -223,7 +223,7 @@ class ElementCommunityViewer:
             
             # Format element
             display_element = element
-            if '.' in element:
+            if isinstance(element, str) and '.' in element:
                 parts = element.split('.')
                 if len(parts) >= 3:
                     display_element = parts[2]
@@ -462,6 +462,16 @@ class ElementCommunityViewer:
         # Load membership values
         try:
             membership_df = pd.read_csv(run_info['membership_file'], index_col=0)
+            print(f"Loaded membership data with {len(membership_df)} elements and {len(membership_df.columns)} communities")
+            
+            # Check if we need to transpose the DataFrame (more communities than elements)
+            if len(membership_df.columns) > len(membership_df):
+                print("Transposing membership matrix (more communities than elements detected)")
+                membership_df = membership_df.T
+                print(f"After transposing: {len(membership_df)} elements and {len(membership_df.columns)} communities")
+            
+            # Ensure index is string type to prevent iteration errors
+            membership_df.index = membership_df.index.astype(str)
         except Exception as e:
             print(f"Error loading membership values: {e}")
             return None
@@ -484,101 +494,155 @@ class ElementCommunityViewer:
     
     def _create_table_community_heatmap(self, membership_df, run_id, viz_dir):
         """Create heatmap showing table-community relationships."""
+        # Ensure all data is numeric
+        for col in membership_df.columns:
+            membership_df[col] = pd.to_numeric(membership_df[col], errors='coerce')
+        
         # Group by table
         tables = {}
         for element in membership_df.index:
-            if '.' in element:
-                parts = element.split('.')
+            element_str = str(element)  # Ensure element is string
+            if '.' in element_str:
+                parts = element_str.split('.')
                 table = parts[1] if len(parts) > 1 else parts[0]
                 if table not in tables:
                     tables[table] = []
                 tables[table].append(element)
         
+        # If no tables were identified, use another grouping approach
+        if not tables:
+            print("No table structure detected in element names, using prefix grouping")
+            for element in membership_df.index:
+                element_str = str(element)
+                # Try to extract a prefix (first few characters)
+                prefix = element_str[:3] if len(element_str) > 3 else element_str
+                if prefix not in tables:
+                    tables[prefix] = []
+                tables[prefix].append(element)
+        
         # Create table-level heatmap
         table_memberships = pd.DataFrame(index=tables.keys(), columns=membership_df.columns)
         for table, elements in tables.items():
-            table_df = membership_df.loc[elements]
-            table_memberships.loc[table] = table_df.mean()
+            try:
+                table_df = membership_df.loc[elements]
+                table_memberships.loc[table] = table_df.mean()
+            except Exception as e:
+                print(f"Error processing table {table}: {e}")
+        
+        # Ensure all values are numeric
+        table_memberships = table_memberships.astype(float)
         
         # Sort tables by their primary community
-        primary_communities = table_memberships.idxmax(axis=1)
-        table_memberships = table_memberships.loc[table_memberships.index.sort_values(key=lambda x: primary_communities[x])]
+        try:
+            primary_communities = table_memberships.idxmax(axis=1)
+            table_memberships = table_memberships.loc[table_memberships.index.sort_values(
+                key=lambda x: primary_communities.get(x, 0))]
+        except Exception as e:
+            print(f"Error sorting tables: {e}")
         
         # Create heatmap
         plt.figure(figsize=(12, max(10, len(tables) * 0.3)))
-        ax = sns.heatmap(table_memberships, cmap="YlGnBu", annot=True, fmt=".2f", 
-                     cbar_kws={'label': 'Average Membership'})
-        
-        # Format community labels
-        ax.set_xticklabels([f"C{col.split('_')[1]}" for col in table_memberships.columns])
-        
-        plt.title(f"Table-Community Membership Heatmap")
-        plt.tight_layout()
-        plt.savefig(os.path.join(viz_dir, f"{run_id}_table_community_heatmap.png"), dpi=300)
-        plt.close()
+        try:
+            ax = sns.heatmap(table_memberships, cmap="YlGnBu", annot=True, fmt=".2f",
+                        cbar_kws={'label': 'Average Membership'})
+            
+            # Format community labels safely
+            try:
+                # Check if columns are like 'community_0' or just numbers
+                if all(isinstance(col, str) and '_' in col for col in table_memberships.columns):
+                    ax.set_xticklabels([f"C{col.split('_')[1]}" for col in table_memberships.columns])
+                else:
+                    ax.set_xticklabels([f"C{col}" for col in table_memberships.columns])
+            except Exception as e:
+                print(f"Warning: Could not format community labels: {e}")
+            
+            plt.title(f"Table-Community Membership Heatmap")
+            plt.tight_layout()
+            plt.savefig(os.path.join(viz_dir, f"{run_id}_table_community_heatmap.png"), dpi=300)
+        except Exception as e:
+            print(f"Error creating heatmap: {e}")
+        finally:
+            plt.close()
     
     def _create_top_elements_per_community(self, membership_df, run_id, viz_dir, top_n=20):
         """Create plots showing top elements in each community."""
+        # Ensure all data is numeric
+        for col in membership_df.columns:
+            membership_df[col] = pd.to_numeric(membership_df[col], errors='coerce')
+        
         # For each community
-        for community in membership_df.columns:
-            comm_id = community.split('_')[1]
-            
-            # Get elements sorted by membership
-            top_elements = membership_df[community].sort_values(ascending=False).head(top_n)
-            
-            # Skip if no elements
-            if len(top_elements) == 0:
-                continue
-            
-            # Clean up element names for display
-            display_names = []
-            tables = []
-            for element in top_elements.index:
-                if '.' in element:
-                    parts = element.split('.')
-                    if len(parts) >= 3:
-                        name = parts[2]
-                        table = parts[1]
-                    else:
-                        name = parts[-1]
-                        table = parts[0]
+        for i, community in enumerate(membership_df.columns):
+            try:
+                # Handle both string and numeric community identifiers
+                if isinstance(community, str) and '_' in community:
+                    comm_id = community.split('_')[1]
                 else:
-                    name = element
-                    table = ""
+                    comm_id = str(community)  # Convert numeric community ID to string
                 
-                display_names.append(name)
-                tables.append(table)
-            
-            # Create bar chart
-            plt.figure(figsize=(12, max(8, len(top_elements) * 0.4)))
-            bars = plt.barh(display_names, top_elements.values)
-            
-            # Color by table
-            unique_tables = list(set(tables))
-            table_colors = plt.cm.tab20(np.linspace(0, 1, len(unique_tables)))
-            table_color_map = {table: table_colors[i] for i, table in enumerate(unique_tables)}
-            
-            for i, table in enumerate(tables):
-                bars[i].set_color(table_color_map[table])
-            
-            # Add legend
-            legend_patches = [plt.Rectangle((0,0),1,1, color=table_color_map[table]) for table in unique_tables]
-            plt.legend(legend_patches, unique_tables, loc='lower right')
-            
-            plt.title(f"Top {top_n} Elements in Community {comm_id}")
-            plt.xlabel("Membership Value")
-            plt.xlim(0, 1)
-            plt.grid(axis='x', alpha=0.3)
-            plt.tight_layout()
-            plt.savefig(os.path.join(viz_dir, f"{run_id}_community_{comm_id}_top_elements.png"), dpi=300)
-            plt.close()
+                # Get elements sorted by membership
+                top_elements = membership_df[community].sort_values(ascending=False).head(top_n)
+                
+                # Skip if no elements
+                if len(top_elements) == 0:
+                    continue
+                
+                # Clean up element names for display
+                display_names = []
+                tables = []
+                for element in top_elements.index:
+                    element_str = str(element)
+                    if '.' in element_str:
+                        parts = element_str.split('.')
+                        if len(parts) >= 3:
+                            name = parts[2]
+                            table = parts[1]
+                        else:
+                            name = parts[-1]
+                            table = parts[0]
+                    else:
+                        name = element_str
+                        table = ""
+                    
+                    display_names.append(name)
+                    tables.append(table)
+                
+                # Create bar chart
+                plt.figure(figsize=(12, max(8, len(top_elements) * 0.4)))
+                bars = plt.barh(display_names, top_elements.values)
+                
+                # Color by table
+                unique_tables = list(set(tables))
+                table_colors = plt.cm.tab20(np.linspace(0, 1, len(unique_tables)))
+                table_color_map = {table: table_colors[i] for i, table in enumerate(unique_tables)}
+                
+                for i, table in enumerate(tables):
+                    bars[i].set_color(table_color_map[table])
+                
+                # Add legend
+                legend_patches = [plt.Rectangle((0,0),1,1, color=table_color_map[table]) for table in unique_tables]
+                plt.legend(legend_patches, unique_tables, loc='lower right')
+                
+                plt.title(f"Top {top_n} Elements in Community {comm_id}")
+                plt.xlabel("Membership Value")
+                plt.xlim(0, 1)
+                plt.grid(axis='x', alpha=0.3)
+                plt.tight_layout()
+                plt.savefig(os.path.join(viz_dir, f"{run_id}_community_{comm_id}_top_elements.png"), dpi=300)
+                plt.close()
+            except Exception as e:
+                print(f"Error creating visualization for community {community}: {e}")
     
     def _create_community_size_comparison(self, membership_df, run_id, viz_dir):
         """Create visualization comparing community sizes."""
         # Count primary elements per community
         primary_counts = {}
-        for community in membership_df.columns:
-            comm_id = int(community.split('_')[1])
+        for i, community in enumerate(membership_df.columns):
+            # Handle both string and numeric community identifiers
+            if isinstance(community, str) and '_' in community:
+                comm_id = int(community.split('_')[1])
+            else:
+                comm_id = i  # Use the column index as the community ID
+            
             count = (membership_df[community] == membership_df.max(axis=1)).sum()
             primary_counts[comm_id] = count
         

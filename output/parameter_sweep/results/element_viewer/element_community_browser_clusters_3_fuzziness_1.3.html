@@ -1,0 +1,270 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Element-Community Browser</title>
+            <style>
+                body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
+                h1 { color: #2c3e50; }
+                .filters { margin-bottom: 20px; padding: 15px; background-color: #f5f5f5; border-radius: 5px; }
+                table { border-collapse: collapse; width: 100%; }
+                th, td { border: 1px solid #ddd; padding: 8px; }
+                th { background-color: #4CAF50; color: white; }
+                tr:nth-child(even) { background-color: #f2f2f2; }
+                .community-bar { height: 20px; background: #ddd; position: relative; border-radius: 3px; overflow: hidden; }
+                .community-segment { height: 100%; position: absolute; }
+                .search-box { padding: 8px; width: 300px; }
+                select { padding: 8px; }
+                .filter-group { margin-bottom: 10px; }
+                .filter-label { font-weight: bold; margin-right: 10px; }
+                #tableSummary { margin-top: 30px; }
+                #runInfo { margin-bottom: 20px; padding: 10px; background-color: #e8f4f8; border-radius: 5px; }
+            </style>
+        </head>
+        <body>
+            <h1>Element-Community Browser</h1>
+            
+            <div id="runInfo">
+                <strong>Parameter Run:</strong> clusters_3_fuzziness_1.3<br>
+                <strong>Elements:</strong> 3<br>
+                <strong>Communities:</strong> 77
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <span class="filter-label">Filter by Table:</span>
+                    <select id="tableFilter" onchange="filterElements()">
+                        <option value="">All Tables</option>
+        
+
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Filter by Community:</span>
+                    <select id="communityFilter" onchange="filterElements()">
+                        <option value="">All Communities</option>
+        
+<option value="dbo.Table1.att_14">Community 0 (0 primary elements)</option>
+<option value="dbo.Table1.att_16">Community 1 (0 primary elements)</option>
+<option value="dbo.Table1.att_17">Community 2 (0 primary elements)</option>
+<option value="dbo.Table1.att_18">Community 3 (0 primary elements)</option>
+<option value="dbo.Table1.att_8">Community 4 (0 primary elements)</option>
+<option value="dbo.Table10.att_1">Community 5 (0 primary elements)</option>
+<option value="dbo.Table10.att_10">Community 6 (0 primary elements)</option>
+<option value="dbo.Table10.att_11">Community 7 (0 primary elements)</option>
+<option value="dbo.Table10.att_13">Community 8 (0 primary elements)</option>
+<option value="dbo.Table10.att_18">Community 9 (0 primary elements)</option>
+<option value="dbo.Table10.att_3">Community 10 (0 primary elements)</option>
+<option value="dbo.Table10.att_8">Community 11 (0 primary elements)</option>
+<option value="dbo.Table10.att_9">Community 12 (0 primary elements)</option>
+<option value="dbo.Table2.att_11">Community 13 (0 primary elements)</option>
+<option value="dbo.Table2.att_13">Community 14 (0 primary elements)</option>
+<option value="dbo.Table2.att_17">Community 15 (0 primary elements)</option>
+<option value="dbo.Table2.att_19">Community 16 (0 primary elements)</option>
+<option value="dbo.Table2.att_20">Community 17 (0 primary elements)</option>
+<option value="dbo.Table2.att_3">Community 18 (0 primary elements)</option>
+<option value="dbo.Table2.att_9">Community 19 (0 primary elements)</option>
+<option value="dbo.Table3.att_12">Community 20 (0 primary elements)</option>
+<option value="dbo.Table3.att_15">Community 21 (0 primary elements)</option>
+<option value="dbo.Table3.att_16">Community 22 (0 primary elements)</option>
+<option value="dbo.Table3.att_17">Community 23 (0 primary elements)</option>
+<option value="dbo.Table3.att_2">Community 24 (0 primary elements)</option>
+<option value="dbo.Table3.att_3">Community 25 (0 primary elements)</option>
+<option value="dbo.Table3.att_4">Community 26 (0 primary elements)</option>
+<option value="dbo.Table3.att_6">Community 27 (0 primary elements)</option>
+<option value="dbo.Table3.att_7">Community 28 (0 primary elements)</option>
+<option value="dbo.Table3.att_8">Community 29 (0 primary elements)</option>
+<option value="dbo.Table4.att_11">Community 30 (0 primary elements)</option>
+<option value="dbo.Table4.att_12">Community 31 (0 primary elements)</option>
+<option value="dbo.Table4.att_15">Community 32 (0 primary elements)</option>
+<option value="dbo.Table4.att_16">Community 33 (0 primary elements)</option>
+<option value="dbo.Table4.att_18">Community 34 (0 primary elements)</option>
+<option value="dbo.Table4.att_4">Community 35 (0 primary elements)</option>
+<option value="dbo.Table5.att_10">Community 36 (0 primary elements)</option>
+<option value="dbo.Table5.att_11">Community 37 (0 primary elements)</option>
+<option value="dbo.Table5.att_13">Community 38 (0 primary elements)</option>
+<option value="dbo.Table5.att_16">Community 39 (1 primary elements)</option>
+<option value="dbo.Table5.att_17">Community 40 (0 primary elements)</option>
+<option value="dbo.Table5.att_18">Community 41 (0 primary elements)</option>
+<option value="dbo.Table5.att_2">Community 42 (0 primary elements)</option>
+<option value="dbo.Table5.att_3">Community 43 (1 primary elements)</option>
+<option value="dbo.Table5.att_5">Community 44 (0 primary elements)</option>
+<option value="dbo.Table6.att_10">Community 45 (0 primary elements)</option>
+<option value="dbo.Table6.att_17">Community 46 (0 primary elements)</option>
+<option value="dbo.Table6.att_2">Community 47 (0 primary elements)</option>
+<option value="dbo.Table6.att_20">Community 48 (0 primary elements)</option>
+<option value="dbo.Table6.att_4">Community 49 (0 primary elements)</option>
+<option value="dbo.Table6.att_9">Community 50 (0 primary elements)</option>
+<option value="dbo.Table7.att_12">Community 51 (0 primary elements)</option>
+<option value="dbo.Table7.att_13">Community 52 (0 primary elements)</option>
+<option value="dbo.Table7.att_16">Community 53 (0 primary elements)</option>
+<option value="dbo.Table7.att_17">Community 54 (0 primary elements)</option>
+<option value="dbo.Table7.att_20">Community 55 (0 primary elements)</option>
+<option value="dbo.Table7.att_6">Community 56 (0 primary elements)</option>
+<option value="dbo.Table8.att_1">Community 57 (0 primary elements)</option>
+<option value="dbo.Table8.att_10">Community 58 (1 primary elements)</option>
+<option value="dbo.Table8.att_13">Community 59 (0 primary elements)</option>
+<option value="dbo.Table8.att_14">Community 60 (0 primary elements)</option>
+<option value="dbo.Table8.att_15">Community 61 (0 primary elements)</option>
+<option value="dbo.Table8.att_17">Community 62 (0 primary elements)</option>
+<option value="dbo.Table8.att_18">Community 63 (0 primary elements)</option>
+<option value="dbo.Table8.att_19">Community 64 (0 primary elements)</option>
+<option value="dbo.Table8.att_20">Community 65 (0 primary elements)</option>
+<option value="dbo.Table8.att_7">Community 66 (0 primary elements)</option>
+<option value="dbo.Table8.att_9">Community 67 (0 primary elements)</option>
+<option value="dbo.Table9.att_1">Community 68 (0 primary elements)</option>
+<option value="dbo.Table9.att_10">Community 69 (0 primary elements)</option>
+<option value="dbo.Table9.att_14">Community 70 (0 primary elements)</option>
+<option value="dbo.Table9.att_16">Community 71 (0 primary elements)</option>
+<option value="dbo.Table9.att_17">Community 72 (0 primary elements)</option>
+<option value="dbo.Table9.att_18">Community 73 (0 primary elements)</option>
+<option value="dbo.Table9.att_19">Community 74 (1 primary elements)</option>
+<option value="dbo.Table9.att_5">Community 75 (0 primary elements)</option>
+<option value="dbo.Table9.att_9">Community 76 (0 primary elements)</option>
+
+                    </select>
+                    <span class="filter-label" style="margin-left: 20px;">Min Membership:</span>
+                    <input type="range" id="membershipFilter" min="0" max="100" value="20" onchange="filterElements()" oninput="document.getElementById('membershipValue').textContent = this.value + '%'">
+                    <span id="membershipValue">20%</span>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Search:</span>
+                    <input type="text" id="searchBox" class="search-box" onkeyup="filterElements()" placeholder="Search for elements...">
+                </div>
+            </div>
+            
+            <table id="elementTable">
+                <thead>
+                    <tr>
+                        <th>Element</th>
+                        <th>Table</th>
+                        <th>Primary Community</th>
+                        <th>Community Distribution</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+        
+
+                <tr data-table="" data-communities="dbo.Table8.att_10,dbo.Table10.att_9,dbo.Table9.att_1,dbo.Table3.att_4,dbo.Table6.att_9,dbo.Table2.att_19,dbo.Table5.att_11,dbo.Table8.att_9,dbo.Table10.att_3,dbo.Table5.att_17,dbo.Table9.att_16,dbo.Table1.att_14,dbo.Table8.att_14,dbo.Table3.att_7,dbo.Table7.att_6,dbo.Table3.att_3,dbo.Table9.att_5,dbo.Table1.att_16,dbo.Table6.att_4,dbo.Table3.att_16,dbo.Table4.att_18,dbo.Table8.att_19,dbo.Table8.att_15,dbo.Table5.att_2,dbo.Table4.att_11,dbo.Table9.att_10,dbo.Table7.att_17,dbo.Table4.att_16,dbo.Table1.att_8,dbo.Table2.att_13,dbo.Table7.att_12,dbo.Table6.att_2,dbo.Table3.att_15,dbo.Table6.att_10,dbo.Table10.att_13,dbo.Table2.att_17,dbo.Table10.att_1,dbo.Table5.att_18,dbo.Table5.att_5,dbo.Table3.att_12,dbo.Table8.att_7,dbo.Table8.att_20,dbo.Table2.att_11,dbo.Table10.att_10,dbo.Table9.att_14,dbo.Table8.att_17,dbo.Table7.att_16,dbo.Table2.att_9,dbo.Table8.att_13,dbo.Table6.att_17,dbo.Table10.att_8,dbo.Table2.att_20,dbo.Table8.att_1,dbo.Table1.att_17" data-community-values="dbo.Table8.att_10:1.00,dbo.Table10.att_9:1.00,dbo.Table9.att_1:1.00,dbo.Table3.att_4:1.00,dbo.Table6.att_9:1.00,dbo.Table2.att_19:1.00,dbo.Table5.att_11:1.00,dbo.Table8.att_9:1.00,dbo.Table10.att_3:1.00,dbo.Table5.att_17:1.00,dbo.Table9.att_16:1.00,dbo.Table1.att_14:1.00,dbo.Table8.att_14:1.00,dbo.Table3.att_7:1.00,dbo.Table7.att_6:0.99,dbo.Table3.att_3:0.99,dbo.Table9.att_5:0.99,dbo.Table1.att_16:0.99,dbo.Table6.att_4:0.99,dbo.Table3.att_16:0.98,dbo.Table4.att_18:0.98,dbo.Table8.att_19:0.97,dbo.Table8.att_15:0.97,dbo.Table5.att_2:0.96,dbo.Table4.att_11:0.96,dbo.Table9.att_10:0.94,dbo.Table7.att_17:0.93,dbo.Table4.att_16:0.90,dbo.Table1.att_8:0.90,dbo.Table2.att_13:0.87,dbo.Table7.att_12:0.87,dbo.Table6.att_2:0.87,dbo.Table3.att_15:0.85,dbo.Table6.att_10:0.85,dbo.Table10.att_13:0.84,dbo.Table2.att_17:0.84,dbo.Table10.att_1:0.84,dbo.Table5.att_18:0.83,dbo.Table5.att_5:0.81,dbo.Table3.att_12:0.79,dbo.Table8.att_7:0.79,dbo.Table8.att_20:0.77,dbo.Table2.att_11:0.76,dbo.Table10.att_10:0.71,dbo.Table9.att_14:0.71,dbo.Table8.att_17:0.64,dbo.Table7.att_16:0.64,dbo.Table2.att_9:0.63,dbo.Table8.att_13:0.47,dbo.Table6.att_17:0.43,dbo.Table10.att_8:0.42,dbo.Table2.att_20:0.42,dbo.Table8.att_1:0.27,dbo.Table1.att_17:0.25">
+                    <td>0</td>
+                    <td></td>
+                    <td>10 (1.00)</td>
+                    <td><div class="community-bar"><div class="community-segment" style="left: 0%; width: 99.98389783005364%; background-color: #2ecc71;" title="dbo.Table8.att_10: 1.00"></div><div class="community-segment" style="left: 99.98389783005364%; width: 99.98267796510129%; background-color: #3498db;" title="dbo.Table10.att_9: 1.00"></div><div class="community-segment" style="left: 199.96657579515494%; width: 99.97780063430622%; background-color: #2ecc71;" title="dbo.Table9.att_1: 1.00"></div><div class="community-segment" style="left: 299.94437642946116%; width: 99.96645081421013%; background-color: #9b59b6;" title="dbo.Table3.att_4: 1.00"></div><div class="community-segment" style="left: 399.9108272436713%; width: 99.94594326412346%; background-color: #3498db;" title="dbo.Table6.att_9: 1.00"></div><div class="community-segment" style="left: 499.85677050779475%; width: 99.89494347275803%; background-color: #2ecc71;" title="dbo.Table2.att_19: 1.00"></div><div class="community-segment" style="left: 599.7517139805527%; width: 99.87584966884576%; background-color: #e74c3c;" title="dbo.Table5.att_11: 1.00"></div><div class="community-segment" style="left: 699.6275636493984%; width: 99.8752227225396%; background-color: #3498db;" title="dbo.Table8.att_9: 1.00"></div><div class="community-segment" style="left: 799.5027863719381%; width: 99.82183018689035%; background-color: #f39c12;" title="dbo.Table10.att_3: 1.00"></div><div class="community-segment" style="left: 899.3246165588284%; width: 99.72893110824096%; background-color: #2980b9;" title="dbo.Table5.att_17: 1.00"></div><div class="community-segment" style="left: 999.0535476670694%; width: 99.64745651763042%; background-color: #c0392b;" title="dbo.Table9.att_16: 1.00"></div><div class="community-segment" style="left: 1098.7010041846997%; width: 99.63799226457866%; background-color: #1abc9c;" title="dbo.Table1.att_14: 1.00"></div><div class="community-segment" style="left: 1198.3389964492785%; width: 99.56105078420269%; background-color: #1abc9c;" title="dbo.Table8.att_14: 1.00"></div><div class="community-segment" style="left: 1297.9000472334812%; width: 99.51146891671304%; background-color: #c0392b;" title="dbo.Table3.att_7: 1.00"></div><div class="community-segment" style="left: 1397.4115161501943%; width: 99.44362831103855%; background-color: #d35400;" title="dbo.Table7.att_6: 0.99"></div><div class="community-segment" style="left: 1496.8551444612328%; width: 99.20141017910503%; background-color: #f39c12;" title="dbo.Table3.att_3: 0.99"></div><div class="community-segment" style="left: 1596.056554640338%; width: 99.20141017910503%; background-color: #1abc9c;" title="dbo.Table9.att_5: 0.99"></div><div class="community-segment" style="left: 1695.257964819443%; width: 98.91750328526501%; background-color: #c0392b;" title="dbo.Table1.att_16: 0.99"></div><div class="community-segment" style="left: 1794.175468104708%; width: 98.54890266623488%; background-color: #9b59b6;" title="dbo.Table6.att_4: 0.99"></div><div class="community-segment" style="left: 1892.7243707709429%; width: 98.17852327634765%; background-color: #c0392b;" title="dbo.Table3.att_16: 0.98"></div><div class="community-segment" style="left: 1990.9028940472906%; width: 97.67313132457444%; background-color: #3498db;" title="dbo.Table4.att_18: 0.98"></div><div class="community-segment" style="left: 2088.576025371865%; width: 97.06624592014788%; background-color: #2ecc71;" title="dbo.Table8.att_19: 0.97"></div><div class="community-segment" style="left: 2185.642271292013%; width: 96.97612781867811%; background-color: #d35400;" title="dbo.Table8.att_15: 0.97"></div><div class="community-segment" style="left: 2282.618399110691%; width: 96.36414780576388%; background-color: #e74c3c;" title="dbo.Table5.att_2: 0.96"></div><div class="community-segment" style="left: 2378.982546916455%; width: 96.13265416692852%; background-color: #e74c3c;" title="dbo.Table4.att_11: 0.96"></div><div class="community-segment" style="left: 2475.1152010833835%; width: 94.4180830921481%; background-color: #2ecc71;" title="dbo.Table9.att_10: 0.94"></div><div class="community-segment" style="left: 2569.5332841755317%; width: 92.54599738277984%; background-color: #2980b9;" title="dbo.Table7.att_17: 0.93"></div><div class="community-segment" style="left: 2662.0792815583113%; width: 90.29225077431592%; background-color: #c0392b;" title="dbo.Table4.att_16: 0.90"></div><div class="community-segment" style="left: 2752.3715323326273%; width: 90.20837682790737%; background-color: #2980b9;" title="dbo.Table1.att_8: 0.90"></div><div class="community-segment" style="left: 2842.5799091605345%; width: 86.78523627202944%; background-color: #9b59b6;" title="dbo.Table2.att_13: 0.87"></div><div class="community-segment" style="left: 2929.365145432564%; width: 86.78523627202942%; background-color: #f39c12;" title="dbo.Table7.att_12: 0.87"></div><div class="community-segment" style="left: 3016.1503817045937%; width: 86.61892874645147%; background-color: #e74c3c;" title="dbo.Table6.att_2: 0.87"></div><div class="community-segment" style="left: 3102.769310451045%; width: 85.37853237643553%; background-color: #d35400;" title="dbo.Table3.att_15: 0.85"></div><div class="community-segment" style="left: 3188.1478428274804%; width: 85.15893953269122%; background-color: #2ecc71;" title="dbo.Table6.att_10: 0.85"></div><div class="community-segment" style="left: 3273.306782360172%; width: 84.06810427230718%; background-color: #9b59b6;" title="dbo.Table10.att_13: 0.84"></div><div class="community-segment" style="left: 3357.374886632479%; width: 84.05521624738603%; background-color: #2980b9;" title="dbo.Table2.att_17: 0.84"></div><div class="community-segment" style="left: 3441.430102879865%; width: 84.03491729929104%; background-color: #2ecc71;" title="dbo.Table10.att_1: 0.84"></div><div class="community-segment" style="left: 3525.465020179156%; width: 82.58582215052711%; background-color: #3498db;" title="dbo.Table5.att_18: 0.83"></div><div class="community-segment" style="left: 3608.0508423296833%; width: 80.86490987051134%; background-color: #1abc9c;" title="dbo.Table5.att_5: 0.81"></div><div class="community-segment" style="left: 3688.9157522001947%; width: 79.0689803023679%; background-color: #f39c12;" title="dbo.Table3.att_12: 0.79"></div><div class="community-segment" style="left: 3767.9847325025626%; width: 78.9779727230281%; background-color: #c0392b;" title="dbo.Table8.att_7: 0.79"></div><div class="community-segment" style="left: 3846.9627052255905%; width: 77.4921096474934%; background-color: #e74c3c;" title="dbo.Table8.att_20: 0.77"></div><div class="community-segment" style="left: 3924.4548148730837%; width: 76.03271799672993%; background-color: #e74c3c;" title="dbo.Table2.att_11: 0.76"></div><div class="community-segment" style="left: 4000.4875328698135%; width: 70.83941435584842%; background-color: #2ecc71;" title="dbo.Table10.att_10: 0.71"></div><div class="community-segment" style="left: 4071.326947225662%; width: 70.79650985757947%; background-color: #1abc9c;" title="dbo.Table9.att_14: 0.71"></div><div class="community-segment" style="left: 4142.123457083241%; width: 64.32792091403489%; background-color: #2980b9;" title="dbo.Table8.att_17: 0.64"></div><div class="community-segment" style="left: 4206.451377997276%; width: 63.65331410067289%; background-color: #c0392b;" title="dbo.Table7.att_16: 0.64"></div><div class="community-segment" style="left: 4270.104692097949%; width: 63.35207057895261%; background-color: #3498db;" title="dbo.Table2.att_9: 0.63"></div><div class="community-segment" style="left: 4333.456762676901%; width: 46.82822948245265%; background-color: #9b59b6;" title="dbo.Table8.att_13: 0.47"></div><div class="community-segment" style="left: 4380.284992159354%; width: 43.09408833717486%; background-color: #2980b9;" title="dbo.Table6.att_17: 0.43"></div><div class="community-segment" style="left: 4423.379080496529%; width: 42.28442464129927%; background-color: #2980b9;" title="dbo.Table10.att_8: 0.42"></div><div class="community-segment" style="left: 4465.663505137829%; width: 41.6567142148507%; background-color: #e74c3c;" title="dbo.Table2.att_20: 0.42"></div><div class="community-segment" style="left: 4507.3202193526795%; width: 26.78241371356474%; background-color: #2ecc71;" title="dbo.Table8.att_1: 0.27"></div><div class="community-segment" style="left: 4534.102633066244%; width: 25.2109577108068%; background-color: #2980b9;" title="dbo.Table1.att_17: 0.25"></div><div class="community-segment" style="left: 4559.313590777051%; width: 19.68266925947735%; background-color: #f39c12;" title="dbo.Table4.att_12: 0.20"></div><div class="community-segment" style="left: 4578.996260036529%; width: 14.191057468773261%; background-color: #2ecc71;" title="dbo.Table5.att_10: 0.14"></div><div class="community-segment" style="left: 4593.187317505302%; width: 10.94114392484736%; background-color: #e74c3c;" title="dbo.Table3.att_2: 0.11"></div><div class="community-segment" style="left: 4604.128461430149%; width: 9.99202578895369%; background-color: #d35400;" title="dbo.Table3.att_6: 0.10"></div><div class="community-segment" style="left: 4614.120487219103%; width: 9.286594558337601%; background-color: #3498db;" title="dbo.Table9.att_9: 0.09"></div><div class="community-segment" style="left: 4623.407081777441%; width: 7.163863147393711%; background-color: #e74c3c;" title="dbo.Table7.att_20: 0.07"></div><div class="community-segment" style="left: 4630.570944924834%; width: 5.56858523279751%; background-color: #3498db;" title="dbo.Table9.att_18: 0.06"></div><div class="community-segment" style="left: 4636.139530157632%; width: 5.55666139613575%; background-color: #9b59b6;" title="dbo.Table4.att_4: 0.06"></div></div></td>
+                    <td>dbo.Table8.att_10 (10): 1.00, dbo.Table10.att_9 (9): 1.00, dbo.Table9.att_1 (1): 1.00, dbo.Table3.att_4 (4): 1.00, dbo.Table6.att_9 (9): 1.00, dbo.Table2.att_19 (19): 1.00, dbo.Table5.att_11 (11): 1.00, dbo.Table8.att_9 (9): 1.00, dbo.Table10.att_3 (3): 1.00, dbo.Table5.att_17 (17): 1.00, dbo.Table9.att_16 (16): 1.00, dbo.Table1.att_14 (14): 1.00, dbo.Table8.att_14 (14): 1.00, dbo.Table3.att_7 (7): 1.00, dbo.Table7.att_6 (6): 0.99, dbo.Table3.att_3 (3): 0.99, dbo.Table9.att_5 (5): 0.99, dbo.Table1.att_16 (16): 0.99, dbo.Table6.att_4 (4): 0.99, dbo.Table3.att_16 (16): 0.98, dbo.Table4.att_18 (18): 0.98, dbo.Table8.att_19 (19): 0.97, dbo.Table8.att_15 (15): 0.97, dbo.Table5.att_2 (2): 0.96, dbo.Table4.att_11 (11): 0.96, dbo.Table9.att_10 (10): 0.94, dbo.Table7.att_17 (17): 0.93, dbo.Table4.att_16 (16): 0.90, dbo.Table1.att_8 (8): 0.90, dbo.Table2.att_13 (13): 0.87, dbo.Table7.att_12 (12): 0.87, dbo.Table6.att_2 (2): 0.87, dbo.Table3.att_15 (15): 0.85, dbo.Table6.att_10 (10): 0.85, dbo.Table10.att_13 (13): 0.84, dbo.Table2.att_17 (17): 0.84, dbo.Table10.att_1 (1): 0.84, dbo.Table5.att_18 (18): 0.83, dbo.Table5.att_5 (5): 0.81, dbo.Table3.att_12 (12): 0.79, dbo.Table8.att_7 (7): 0.79, dbo.Table8.att_20 (20): 0.77, dbo.Table2.att_11 (11): 0.76, dbo.Table10.att_10 (10): 0.71, dbo.Table9.att_14 (14): 0.71, dbo.Table8.att_17 (17): 0.64, dbo.Table7.att_16 (16): 0.64, dbo.Table2.att_9 (9): 0.63, dbo.Table8.att_13 (13): 0.47, dbo.Table6.att_17 (17): 0.43, dbo.Table10.att_8 (8): 0.42, dbo.Table2.att_20 (20): 0.42, dbo.Table8.att_1 (1): 0.27, dbo.Table1.att_17 (17): 0.25, dbo.Table4.att_12 (12): 0.20, dbo.Table5.att_10 (10): 0.14, dbo.Table3.att_2 (2): 0.11</td>
+                </tr>
+            
+
+                <tr data-table="" data-communities="dbo.Table5.att_3,dbo.Table9.att_19,dbo.Table1.att_18,dbo.Table4.att_15,dbo.Table8.att_1" data-community-values="dbo.Table5.att_3:1.00,dbo.Table9.att_19:1.00,dbo.Table1.att_18:0.95,dbo.Table4.att_15:0.71,dbo.Table8.att_1:0.65">
+                    <td>1</td>
+                    <td></td>
+                    <td>3 (1.00)</td>
+                    <td><div class="community-bar"><div class="community-segment" style="left: 0%; width: 99.99966978769322%; background-color: #f39c12;" title="dbo.Table5.att_3: 1.00"></div><div class="community-segment" style="left: 99.99966978769322%; width: 99.99966978769322%; background-color: #2ecc71;" title="dbo.Table9.att_19: 1.00"></div><div class="community-segment" style="left: 199.99933957538644%; width: 94.68398889929142%; background-color: #3498db;" title="dbo.Table1.att_18: 0.95"></div><div class="community-segment" style="left: 294.68332847467786%; width: 71.14374968312099%; background-color: #d35400;" title="dbo.Table4.att_15: 0.71"></div><div class="community-segment" style="left: 365.82707815779884%; width: 64.93846394248133%; background-color: #2ecc71;" title="dbo.Table8.att_1: 0.65"></div><div class="community-segment" style="left: 430.7655421002802%; width: 8.386326363047%; background-color: #e74c3c;" title="dbo.Table2.att_20: 0.08"></div><div class="community-segment" style="left: 439.15186846332716%; width: 6.760626613706839%; background-color: #1abc9c;" title="dbo.Table9.att_14: 0.07"></div></div></td>
+                    <td>dbo.Table5.att_3 (3): 1.00, dbo.Table9.att_19 (19): 1.00, dbo.Table1.att_18 (18): 0.95, dbo.Table4.att_15 (15): 0.71, dbo.Table8.att_1 (1): 0.65</td>
+                </tr>
+            
+
+                <tr data-table="" data-communities="dbo.Table5.att_16,dbo.Table7.att_13,dbo.Table5.att_13,dbo.Table10.att_11,dbo.Table8.att_18,dbo.Table9.att_17,dbo.Table6.att_20,dbo.Table10.att_18,dbo.Table2.att_3,dbo.Table3.att_8,dbo.Table3.att_17,dbo.Table4.att_4,dbo.Table9.att_18,dbo.Table7.att_20,dbo.Table9.att_9,dbo.Table3.att_6,dbo.Table3.att_2,dbo.Table5.att_10,dbo.Table4.att_12,dbo.Table1.att_17,dbo.Table10.att_8,dbo.Table6.att_17,dbo.Table8.att_13,dbo.Table2.att_20,dbo.Table2.att_9,dbo.Table7.att_16,dbo.Table8.att_17,dbo.Table10.att_10,dbo.Table4.att_15,dbo.Table2.att_11,dbo.Table9.att_14,dbo.Table8.att_20,dbo.Table8.att_7,dbo.Table3.att_12" data-community-values="dbo.Table5.att_16:1.00,dbo.Table7.att_13:0.99,dbo.Table5.att_13:0.99,dbo.Table10.att_11:0.99,dbo.Table8.att_18:0.98,dbo.Table9.att_17:0.97,dbo.Table6.att_20:0.96,dbo.Table10.att_18:0.96,dbo.Table2.att_3:0.95,dbo.Table3.att_8:0.95,dbo.Table3.att_17:0.95,dbo.Table4.att_4:0.94,dbo.Table9.att_18:0.94,dbo.Table7.att_20:0.93,dbo.Table9.att_9:0.91,dbo.Table3.att_6:0.90,dbo.Table3.att_2:0.89,dbo.Table5.att_10:0.86,dbo.Table4.att_12:0.80,dbo.Table1.att_17:0.74,dbo.Table10.att_8:0.58,dbo.Table6.att_17:0.56,dbo.Table8.att_13:0.51,dbo.Table2.att_20:0.50,dbo.Table2.att_9:0.37,dbo.Table7.att_16:0.35,dbo.Table8.att_17:0.32,dbo.Table10.att_10:0.29,dbo.Table4.att_15:0.26,dbo.Table2.att_11:0.22,dbo.Table9.att_14:0.22,dbo.Table8.att_20:0.22,dbo.Table8.att_7:0.21,dbo.Table3.att_12:0.21">
+                    <td>2</td>
+                    <td></td>
+                    <td>16 (1.00)</td>
+                    <td><div class="community-bar"><div class="community-segment" style="left: 0%; width: 99.8051513254885%; background-color: #c0392b;" title="dbo.Table5.att_16: 1.00"></div><div class="community-segment" style="left: 99.8051513254885%; width: 99.41311309713913%; background-color: #9b59b6;" title="dbo.Table7.att_13: 0.99"></div><div class="community-segment" style="left: 199.2182644226276%; width: 98.82582429533032%; background-color: #9b59b6;" title="dbo.Table5.att_13: 0.99"></div><div class="community-segment" style="left: 298.04408871795795%; width: 98.67821990542109%; background-color: #e74c3c;" title="dbo.Table10.att_11: 0.99"></div><div class="community-segment" style="left: 396.72230862337904%; width: 98.49591220521866%; background-color: #3498db;" title="dbo.Table8.att_18: 0.98"></div><div class="community-segment" style="left: 495.2182208285977%; width: 96.6310710924134%; background-color: #2980b9;" title="dbo.Table9.att_17: 0.97"></div><div class="community-segment" style="left: 591.8492919210111%; width: 96.1428772044394%; background-color: #e74c3c;" title="dbo.Table6.att_20: 0.96"></div><div class="community-segment" style="left: 687.9921691254505%; width: 95.8809725024124%; background-color: #3498db;" title="dbo.Table10.att_18: 0.96"></div><div class="community-segment" style="left: 783.8731416278629%; width: 95.19284720725952%; background-color: #f39c12;" title="dbo.Table2.att_3: 0.95"></div><div class="community-segment" style="left: 879.0659888351224%; width: 95.1025557520236%; background-color: #2980b9;" title="dbo.Table3.att_8: 0.95"></div><div class="community-segment" style="left: 974.168544587146%; width: 94.9144859485132%; background-color: #2980b9;" title="dbo.Table3.att_17: 0.95"></div><div class="community-segment" style="left: 1069.0830305356592%; width: 94.3606669210344%; background-color: #9b59b6;" title="dbo.Table4.att_4: 0.94"></div><div class="community-segment" style="left: 1163.4436974566936%; width: 94.30189355910255%; background-color: #3498db;" title="dbo.Table9.att_18: 0.94"></div><div class="community-segment" style="left: 1257.7455910157962%; width: 92.77425462491871%; background-color: #e74c3c;" title="dbo.Table7.att_20: 0.93"></div><div class="community-segment" style="left: 1350.519845640715%; width: 90.61418715624632%; background-color: #3498db;" title="dbo.Table9.att_9: 0.91"></div><div class="community-segment" style="left: 1441.1340327969613%; width: 89.89868678997541%; background-color: #d35400;" title="dbo.Table3.att_6: 0.90"></div><div class="community-segment" style="left: 1531.0327195869368%; width: 88.74021660872917%; background-color: #e74c3c;" title="dbo.Table3.att_2: 0.89"></div><div class="community-segment" style="left: 1619.772936195666%; width: 85.80324630306829%; background-color: #2ecc71;" title="dbo.Table5.att_10: 0.86"></div><div class="community-segment" style="left: 1705.5761824987344%; width: 80.1759120539724%; background-color: #f39c12;" title="dbo.Table4.att_12: 0.80"></div><div class="community-segment" style="left: 1785.7520945527067%; width: 74.42083381011211%; background-color: #2980b9;" title="dbo.Table1.att_17: 0.74"></div><div class="community-segment" style="left: 1860.1729283628188%; width: 57.55815861110977%; background-color: #2980b9;" title="dbo.Table10.att_8: 0.58"></div><div class="community-segment" style="left: 1917.7310869739285%; width: 56.480504546004916%; background-color: #2980b9;" title="dbo.Table6.att_17: 0.56"></div><div class="community-segment" style="left: 1974.2115915199336%; width: 50.865401170601665%; background-color: #9b59b6;" title="dbo.Table8.att_13: 0.51"></div><div class="community-segment" style="left: 2025.0769926905352%; width: 49.95695942210229%; background-color: #e74c3c;" title="dbo.Table2.att_20: 0.50"></div><div class="community-segment" style="left: 2075.0339521126375%; width: 36.61241855289188%; background-color: #3498db;" title="dbo.Table2.att_9: 0.37"></div><div class="community-segment" style="left: 2111.6463706655295%; width: 35.1452000807927%; background-color: #c0392b;" title="dbo.Table7.att_16: 0.35"></div><div class="community-segment" style="left: 2146.791570746322%; width: 31.98194777360755%; background-color: #2980b9;" title="dbo.Table8.att_17: 0.32"></div><div class="community-segment" style="left: 2178.77351851993%; width: 28.95957841252685%; background-color: #2ecc71;" title="dbo.Table10.att_10: 0.29"></div><div class="community-segment" style="left: 2207.7330969324566%; width: 26.17197268819761%; background-color: #d35400;" title="dbo.Table4.att_15: 0.26"></div><div class="community-segment" style="left: 2233.905069620654%; width: 22.48117267384398%; background-color: #e74c3c;" title="dbo.Table2.att_11: 0.22"></div><div class="community-segment" style="left: 2256.386242294498%; width: 22.44286352871367%; background-color: #1abc9c;" title="dbo.Table9.att_14: 0.22"></div><div class="community-segment" style="left: 2278.8291058232116%; width: 21.52459120803686%; background-color: #e74c3c;" title="dbo.Table8.att_20: 0.22"></div><div class="community-segment" style="left: 2300.3536970312484%; width: 20.81022872209793%; background-color: #c0392b;" title="dbo.Table8.att_7: 0.21"></div><div class="community-segment" style="left: 2321.1639257533466%; width: 20.79739369409365%; background-color: #f39c12;" title="dbo.Table3.att_12: 0.21"></div><div class="community-segment" style="left: 2341.96131944744%; width: 19.131391711799612%; background-color: #1abc9c;" title="dbo.Table5.att_5: 0.19"></div><div class="community-segment" style="left: 2361.0927111592396%; width: 17.34473186907849%; background-color: #3498db;" title="dbo.Table5.att_18: 0.17"></div><div class="community-segment" style="left: 2378.4374430283183%; width: 15.89373412986287%; background-color: #2ecc71;" title="dbo.Table10.att_1: 0.16"></div><div class="community-segment" style="left: 2394.331177158181%; width: 14.77330610682506%; background-color: #2ecc71;" title="dbo.Table6.att_10: 0.15"></div><div class="community-segment" style="left: 2409.1044832650064%; width: 13.706398377921461%; background-color: #9b59b6;" title="dbo.Table10.att_13: 0.14"></div><div class="community-segment" style="left: 2422.810881642928%; width: 13.497943349725611%; background-color: #2980b9;" title="dbo.Table2.att_17: 0.13"></div><div class="community-segment" style="left: 2436.3088249926536%; width: 13.126180317803172%; background-color: #d35400;" title="dbo.Table3.att_15: 0.13"></div><div class="community-segment" style="left: 2449.4350053104567%; width: 12.747807712086278%; background-color: #e74c3c;" title="dbo.Table6.att_2: 0.13"></div><div class="community-segment" style="left: 2462.182813022543%; width: 12.708062826082939%; background-color: #f39c12;" title="dbo.Table7.att_12: 0.13"></div><div class="community-segment" style="left: 2474.890875848626%; width: 12.70806282608292%; background-color: #9b59b6;" title="dbo.Table2.att_13: 0.13"></div><div class="community-segment" style="left: 2487.5989386747087%; width: 9.674513645312711%; background-color: #c0392b;" title="dbo.Table4.att_16: 0.10"></div><div class="community-segment" style="left: 2497.2734523200215%; width: 8.71196069926562%; background-color: #2980b9;" title="dbo.Table1.att_8: 0.09"></div><div class="community-segment" style="left: 2505.985413019287%; width: 8.279122343953931%; background-color: #2ecc71;" title="dbo.Table8.att_1: 0.08"></div><div class="community-segment" style="left: 2514.264535363241%; width: 5.5742282569500095%; background-color: #2ecc71;" title="dbo.Table9.att_10: 0.06"></div></div></td>
+                    <td>dbo.Table5.att_16 (16): 1.00, dbo.Table7.att_13 (13): 0.99, dbo.Table5.att_13 (13): 0.99, dbo.Table10.att_11 (11): 0.99, dbo.Table8.att_18 (18): 0.98, dbo.Table9.att_17 (17): 0.97, dbo.Table6.att_20 (20): 0.96, dbo.Table10.att_18 (18): 0.96, dbo.Table2.att_3 (3): 0.95, dbo.Table3.att_8 (8): 0.95, dbo.Table3.att_17 (17): 0.95, dbo.Table4.att_4 (4): 0.94, dbo.Table9.att_18 (18): 0.94, dbo.Table7.att_20 (20): 0.93, dbo.Table9.att_9 (9): 0.91, dbo.Table3.att_6 (6): 0.90, dbo.Table3.att_2 (2): 0.89, dbo.Table5.att_10 (10): 0.86, dbo.Table4.att_12 (12): 0.80, dbo.Table1.att_17 (17): 0.74, dbo.Table10.att_8 (8): 0.58, dbo.Table6.att_17 (17): 0.56, dbo.Table8.att_13 (13): 0.51, dbo.Table2.att_20 (20): 0.50, dbo.Table2.att_9 (9): 0.37, dbo.Table7.att_16 (16): 0.35, dbo.Table8.att_17 (17): 0.32, dbo.Table10.att_10 (10): 0.29, dbo.Table4.att_15 (15): 0.26, dbo.Table2.att_11 (11): 0.22, dbo.Table9.att_14 (14): 0.22, dbo.Table8.att_20 (20): 0.22, dbo.Table8.att_7 (7): 0.21, dbo.Table3.att_12 (12): 0.21, dbo.Table5.att_5 (5): 0.19, dbo.Table5.att_18 (18): 0.17, dbo.Table10.att_1 (1): 0.16, dbo.Table6.att_10 (10): 0.15, dbo.Table10.att_13 (13): 0.14, dbo.Table2.att_17 (17): 0.13, dbo.Table3.att_15 (15): 0.13, dbo.Table6.att_2 (2): 0.13, dbo.Table7.att_12 (12): 0.13, dbo.Table2.att_13 (13): 0.13</td>
+                </tr>
+            
+
+                </tbody>
+            </table>
+            
+            <div id="tableSummary">
+                <h2>Table Community Summary</h2>
+                <table id="tableCommunitySummary">
+                    <thead>
+                        <tr>
+                            <th>Table</th>
+                            <th>Elements</th>
+                            <th>Primary Communities</th>
+                            <th>Community Distribution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+
+                </tbody>
+            </table>
+            </div>
+            
+            <script>
+                function filterElements() {
+                    // Get filter values
+                    const tableFilter = document.getElementById('tableFilter').value;
+                    const communityFilter = document.getElementById('communityFilter').value;
+                    const membershipFilter = document.getElementById('membershipFilter').value / 100;
+                    const searchText = document.getElementById('searchBox').value.toLowerCase();
+                    
+                    // Get all rows
+                    const rows = document.getElementById('elementTable').getElementsByTagName('tbody')[0].rows;
+                    
+                    // Filter rows
+                    let visibleCount = 0;
+                    
+                    for (let i = 0; i < rows.length; i++) {
+                        let row = rows[i];
+                        let showRow = true;
+                        
+                        // Filter by table
+                        if (tableFilter && row.getAttribute('data-table') !== tableFilter) {
+                            showRow = false;
+                        }
+                        
+                        // Filter by community and membership threshold
+                        if (communityFilter) {
+                            const communityValues = row.getAttribute('data-community-values');
+                            if (communityValues) {
+                                const communityData = {};
+                                communityValues.split(',').forEach(item => {
+                                    const [comm, value] = item.split(':');
+                                    communityData[comm] = parseFloat(value);
+                                });
+                                
+                                // Check if this community exists and meets threshold
+                                if (!communityData[communityFilter] || communityData[communityFilter] < membershipFilter) {
+                                    showRow = false;
+                                }
+                            } else {
+                                showRow = false;
+                            }
+                        }
+                        
+                        // Filter by search text
+                        if (searchText) {
+                            const text = row.textContent.toLowerCase();
+                            if (!text.includes(searchText)) {
+                                showRow = false;
+                            }
+                        }
+                        
+                        // Show/hide row
+                        row.style.display = showRow ? '' : 'none';
+                        if (showRow) {
+                            visibleCount++;
+                        }
+                    }
+                    
+                    // Update visible count in runInfo
+                    const runInfo = document.getElementById('runInfo');
+                    const countText = runInfo.innerHTML.split('<br>')[2];
+                    if (countText) {
+                        runInfo.innerHTML = runInfo.innerHTML.replace(
+                            countText, 
+                            `<strong>Elements:</strong> ${visibleCount} shown (${rows.length} total)`
+                        );
+                    }
+                }
+                
+                // Initial filtering
+                filterElements();
+            </script>
+        </body>
+        </html>
+        
