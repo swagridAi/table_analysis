@@ -1,0 +1,3 @@
+community_id,report_count,reports,total_elements,opportunity_type,impact_score
+2,5,"['Report 10', 'Report 12', 'Report 15', 'Report 16', 'Report 18']",91,consolidation,4.55
+0,4,"['Report 1', 'Report 2', 'Report 4', 'Report 9']",51,consolidation,2.04
