@@ -16,7 +16,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import json
-from collections import defaultdict
+from collections import defaultdict, Counter
 import webbrowser
 import time
 
@@ -162,13 +162,28 @@ class ElementCommunityViewer:
                         <option value="">All Tables</option>
         """)
         
-        # Extract table names from elements
+        # This is a more robust table extraction approach
         tables = defaultdict(list)
         for element in membership_df.index:
-            if isinstance(element, str) and '.' in element:
-                parts = element.split('.')
-                table = parts[1] if len(parts) > 1 else parts[0]
-                tables[table].append(element)
+            element_str = str(element)  # Ensure element is string
+            
+            # Try to extract table using pattern matching
+            if '.' in element_str:
+                parts = element_str.split('.')
+                # Handle dbo.Table.Column pattern
+                if len(parts) >= 3 and parts[0] == 'dbo':
+                    table = parts[1]
+                # Handle Table.Column pattern
+                elif len(parts) == 2:
+                    table = parts[0]
+                # Fallback
+                else:
+                    table = "Table_" + parts[0][:3]
+            else:
+                # For elements without dot notation, create artificial grouping
+                table = "Group_" + element_str[:3]
+            
+            tables[table].append(element)
         
         # Add table options
         for table in sorted(tables.keys()):
@@ -308,10 +323,16 @@ class ElementCommunityViewer:
             community_counts = Counter(primary_communities)
             
             # Format primary communities
-            primary_comm_text = ', '.join([f"{comm.split('_')[1]}: {count}" for comm, count in community_counts.most_common(3)])
-            if len(community_counts) > 3:
-                primary_comm_text += f", +{len(community_counts)-3} more"
+            primary_comm_text = []
+            for comm, count in community_counts.most_common(3):
+                # Handle different community ID formats
+                if isinstance(comm, str) and '_' in comm:
+                    comm_id = comm.split('_')[1]
+                else:
+                    comm_id = str(comm)
+                primary_comm_text.append(f"{comm_id}: {count}")
             
+            primary_comm_text = ", ".join(primary_comm_text)
             # Create community distribution bar
             bar_html = '<div class="community-bar">'
             
