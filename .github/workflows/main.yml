@@ -1,0 +1,30 @@
+name: Unzip Uploaded Files into Root
+
+on:
+  push:
+    paths:
+      - '**.zip'
+
+jobs:
+  unzip-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Unzip all zip files into root
+      run: |
+        for f in *.zip; do
+          [ -e "$f" ] || continue
+          unzip -o "$f" -d .
+          rm "$f"
+        done
+
+    - name: Commit and push unzipped content
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git add .
+        git commit -m "Auto-unzipped into root"
+        git push
