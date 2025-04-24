@@ -1,5 +1,6 @@
 name: Unzip Uploaded Files into Root
 
+
 on:
   push:
   workflow_dispatch:
@@ -7,6 +8,9 @@ on:
 jobs:
   unzip-and-commit:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # This is important to allow pushes!
 
     steps:
     - name: Checkout code
@@ -25,5 +29,13 @@ jobs:
         git config user.name "github-actions"
         git config user.email "github-actions@github.com"
         git add .
-        git commit -m "Auto-unzipped into root"
+        git diff --cached --quiet || git commit -m "Auto-unzipped into root"
+        git push
+      env:
+        GIT_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # GitHub automatically creates this token—used below
+
+    - name: Set remote to use token
+      run: |
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
         git push
