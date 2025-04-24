@@ -2,8 +2,7 @@ name: Unzip Uploaded Files into Root
 
 on:
   push:
-    paths:
-      - '**.zip'
+  workflow_dispatch:
 
 jobs:
   unzip-and-commit:
